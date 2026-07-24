@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "miyarai"
+version = "0.1.0"
+description = "An educational deep learning framework written entirely from scratch in python."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "GPL-3.0-or-later" } 
+authors =[
+    {name = "Tashfeen Miyar"}
+]
+keywords = [
+    "deep-learning",
+    "machine-learning",
+    "ai",
+    "autograd",
+    "tensor"
+]
+classifiers = [
+    "Programming language :: Python :: 3",
+    "License :: OSI Approved ::  GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent"
+]
+
+[tool.steuptools]
+packages = ["miyarai"]
