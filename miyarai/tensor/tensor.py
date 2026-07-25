@@ -106,7 +106,29 @@ class Tensor:
                 for _ in range(current_shape[0])
             ]
         return build(shape)
-              
+
+    def _check_same_shape(self, other):
+        if self.shape != other.shape:
+            raise ValueError(
+                f"Cannot operate on tensors with shapes {self.shape} and {other.shape}."
+            )
+
+
+    def _elementwise_operation(self, other, operation):
+        self._check_same_shape(other)
+
+        flat_self = self._flatten(self.data)
+        flat_other = self._flatten(other.data)
+
+        result = [
+            operation(a, b)
+            for a, b in zip(flat_self, flat_other)
+        ]
+
+        new_data = self._build_shape(result, self.shape)
+
+        return Tensor(new_data)
+         
     def __getitem__(self,index):
         return self.data[index]
 
@@ -163,6 +185,15 @@ class Tensor:
             return False
 
         return self.data == other.data
+
+    def __add__(self, other):
+        if not isinstance(other, Tensor):
+            return NotImplemented
+
+        return self._elementwise_operation(
+            other,
+            lambda a, b: a + b
+        )
     
     def __repr__(self):
         return f"Tensor({self.data})"
