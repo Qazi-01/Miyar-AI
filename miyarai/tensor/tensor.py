@@ -136,6 +136,25 @@ class Tensor:
 
         return Tensor(new_data)
 
+    def transpose(self):
+
+        if self.ndim != 2:
+            raise ValueError("Transpose is only supported for 2d tensors ")
+
+        rows = self.shape[0]
+        cols = self.shape[1]
+
+        transposed = []
+        
+        for col in range(cols):
+            new_row = []
+            for row in range(rows):
+                new_row.append(self.data[row][col])
+
+            transposed.append(new_row)
+
+        return Tensor(transposed)
+    
     def __iter__(self):
         return iter(self.data)
 
