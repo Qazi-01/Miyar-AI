@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 class Tensor:
 
     def __init__(self, data):
@@ -59,6 +62,9 @@ class Tensor:
     
     def __len__(self):
         return len(self.data)
+
+    def clone(self):
+        return Tensor(deepcopy(self.data))
     
     def __repr__(self):
         return f"Tensor({self.data})"
