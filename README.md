@@ -4,7 +4,7 @@ An educational deep learning framework written entirely from scratch in Python.
 
 MiyarAI is built to demonstrate how modern deep learning frameworks work internally without relying on PyTorch or TensorFlow internals. Every component is implemented from first principles using Python.
 
-> **Current Version:** v0.1.0 (Development)
+> **Current Version:** v0.1.0 
 
 ---
 
@@ -30,7 +30,7 @@ More features will be added in future releases.
 Clone the repository:
 
 ```bash
-git clone https://github.com/<your-username>/Miyar-AI.git
+git clone https://github.com/Qazi-01/Miyar-AI.git
 cd Miyar-AI
 ```
 
@@ -39,6 +39,12 @@ Install in editable mode:
 ```bash
 pip install -e .
 ```
+
+---
+
+## Requirements
+
+- Python 3.12 or newer
 
 ---
 
@@ -66,18 +72,16 @@ print(x.transpose())
 ```
 Miyar-AI/
 │
-├── docs/
 ├── examples/
 ├── tests/
 ├── miyarai/
-│   ├── tensor/
-│   ├── nn/
-│   ├── optim/
-│   ├── datasets/
-│   ├── engine/
-│   └── utils/
+│   ├── __init__.py
+│   └── tensor/
+│       ├── __init__.py
+│       └── tensor.py
 │
 ├── README.md
+├── CHANGELOG.md
 ├── LICENSE
 ├── pyproject.toml
 └── requirements.txt
@@ -132,6 +136,13 @@ Miyar-AI/
 ```bash
 python -m unittest discover tests
 ```
+
+---
+
+## Dependencies
+
+MiyarAI v0.1.0 uses only the Python standard library.
+No third-party dependencies are required.
 
 ---
 
