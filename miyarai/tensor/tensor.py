@@ -65,6 +65,9 @@ class Tensor:
 
     def clone(self):
         return Tensor(deepcopy(self.data))
+
+    def tolist(self):
+        return deepcopy(self.data)
     
     def __repr__(self):
         return f"Tensor({self.data})"
