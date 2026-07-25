@@ -1,10 +1,35 @@
 class Tensor:
 
     def __init__(self, data):
+        self._validate_shape(data)
+
         self.data = data
         self.shape = self._infer_shape(data)
         self.ndim = len(self.shape)
         self.size =self._calculate_size(self.shape)
+
+    def _validate_shape(self, data):
+
+        if not isinstance(data, list):
+            return
+        if len(data) == 0:
+            return
+
+        # Either all elements are list, or none are.
+        are_lists = [isinstance(item,list) for item in data]
+
+        if any(are_lists) and not all(are_lists):
+            raise ValueError("inconsistent tensor shape")
+
+        if all(are_lists):
+            expected_length = len(data[0])
+
+            for item in data:
+                if len(item) != expected_length:
+                    raise ValueError("Inconsistent tensor shape")
+
+                self._validate_shape(item)
+
 
     def _infer_shape(self,data):
         shape = []
