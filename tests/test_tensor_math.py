@@ -101,3 +101,70 @@ class TestTensorAddition(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class TestTensorSubtraction(unittest.TestCase):
+
+    def test_sub_1d_tensors(self):
+        a = Tensor([5,7,9])
+        b = Tensor([1,2,3])
+
+        res = a - b 
+        self.assertEqual(
+            res,
+            Tensor([4,5,6])
+            )
+
+    def test_sub_2d_tensors(self):
+        a = Tensor ([
+            [10,20],
+            [30,40]
+        ])
+        b = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        res = a - b
+        self.assertEqual(
+            res,
+            Tensor([
+                [9,18],
+                [27,36]
+            ])
+        )
+
+    def test_sub_floats(self):
+        a = Tensor([2.5, 5.5])
+        b = Tensor([0.5,1.5])
+        res = a - b 
+
+        self.assertEqual(
+            res,
+            Tensor([2.0,4.0])
+        )
+
+    def test_sub_negative_numbers(self):
+        a = Tensor([-5,2,10])
+        b = Tensor([-2,4,3])
+        res = a - b 
+
+        self.assertEqual(
+            res,
+            Tensor([-3,-2,7])
+        )
+
+    def test_original_tensors_unchange_after_sub(self):
+        a = Tensor ([5,7,9])
+        b = Tensor ([1,2,3])
+        res = a - b
+
+        self.assertEqual(a ,Tensor([5,7,9]))
+        self.assertEqual(b ,Tensor([1,2,3]))
+        self.assertEqual(res ,Tensor([4,5,6]))
+
+    def test_sub_shape_mismatch(self):
+        a = Tensor ([1,2])
+        b = Tensor ([1,2,3])
+
+        with self.assertRaises(ValueError):
+            a - b
