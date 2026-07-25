@@ -77,7 +77,36 @@ class Tensor:
                 raise TypeError("Tensor element must have same data type.")
 
         return first.__name__
-                        
+
+    def _flatten(self, data):
+
+        result = []
+        def flatten(item):
+            if isinstance(item, list):
+                for value in item:
+                    flatten(value)
+            else:
+                result.append(item)
+
+        flatten(data)
+
+        return result
+
+    def _build_shape(self, flat, shape):
+
+        flat = flat.copy()
+
+        def build(current_shape):
+            if len(current_shape) == 1:
+                result = flat[:current_shape[0]]
+                del flat[:current_shape[0]]
+                return result 
+            return[
+                build(current_shape[1:])
+                for _ in range(current_shape[0])
+            ]
+        return build(shape)
+              
     def __getitem__(self,index):
         return self.data[index]
 
@@ -92,6 +121,20 @@ class Tensor:
 
     def tolist(self):
         return deepcopy(self.data)
+
+    def reshape(self, shape):
+
+        new_size = self._calculate_size(shape)
+
+        if new_size != self.size:
+            raise ValueError(
+                f"Cannot reshape tensor size {self.size} into shape {shape}."
+            )
+
+        flat = self._flatten(self.data)
+        new_data = self._build_shape(flat, shape)
+
+        return Tensor(new_data)
 
     def __iter__(self):
         return iter(self.data)
