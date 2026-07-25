@@ -51,5 +51,8 @@ class Tensor:
 
         return size
 
+    def __getitem__(self,index):
+        return self.data[index]
+
     def __repr__(self):
         return f"Tensor({self.data})"
