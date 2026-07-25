@@ -68,6 +68,9 @@ class Tensor:
 
     def tolist(self):
         return deepcopy(self.data)
+
+    def __iter__(self):
+        return iter(self.data)
     
     def __repr__(self):
         return f"Tensor({self.data})"
