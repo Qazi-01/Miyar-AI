@@ -71,6 +71,12 @@ class Tensor:
 
     def __iter__(self):
         return iter(self.data)
+
+    def __eq__(self, other):
+        if not isinstance(other, Tensor):
+            return False
+
+        return self.data == other.data
     
     def __repr__(self):
         return f"Tensor({self.data})"
