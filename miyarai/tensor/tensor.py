@@ -9,7 +9,8 @@ class Tensor:
         self.data = data
         self.shape = self._infer_shape(data)
         self.ndim = len(self.shape)
-        self.size =self._calculate_size(self.shape)
+        self.size = self._calculate_size(self.shape)
+        self.dtype = self._infer_dtype(data)
 
     def _validate_shape(self, data):
 
@@ -54,6 +55,29 @@ class Tensor:
 
         return size
 
+    def _infer_dtype(self,data):
+        values = []
+
+        def collect(obj):
+            if isinstance(obj, list):
+                for item in obj:
+                    collect(item)
+            else:
+                values.append(type(obj))
+
+        collect(data)
+
+        if not values:
+            return None 
+
+        first = values[0]
+
+        for value in values:
+            if value != first:
+                raise TypeError("Tensor element must have same data type.")
+
+        return first.__name__
+                        
     def __getitem__(self,index):
         return self.data[index]
 
