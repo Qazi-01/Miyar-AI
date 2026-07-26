@@ -102,6 +102,8 @@ class TestTensorAddition(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 
+#res means result
+
 class TestTensorSubtraction(unittest.TestCase):
 
     def test_sub_1d_tensors(self):
@@ -168,3 +170,80 @@ class TestTensorSubtraction(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             a - b
+
+class TestTensorMultiplication(unittest.TestCase):
+
+    def test_mul_1d_tensors(self):
+        a = Tensor([2,3,4])
+        b = Tensor([5,6,7])
+        res = a * b 
+
+        self.assertEqual(
+            res,
+            Tensor([10,18,28])
+        )
+
+    def test_mul_2d_tensors(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        b = Tensor([
+            [5,6],
+            [7,8]
+        ])
+
+        res = a * b
+
+        self.assertEqual(
+            res,
+            Tensor([
+                [5,12],
+                [21,32]
+            ])
+        )
+
+    def test_mul_floats(self):
+        a = Tensor([1.5,2.5])
+        b = Tensor([2.0,4.0])
+        res = a * b
+
+        self.assertEqual(
+            res,
+            Tensor([3.0,10.0])
+        )
+
+    def test_mul_negative_numbers(self):
+        a = Tensor([-2,3,-4])
+        b = Tensor([5,-6,7])
+        res = a * b
+
+        self.assertEqual(
+            res,
+            Tensor([-10,-18,-28])
+        )
+
+    def test_original_tensors_unchanged_after_mul(self):
+        a = Tensor([2,3,4])
+        b = Tensor([5,6,7])
+        res = a * b
+
+        self.assertEqual(a, Tensor([2,3,4]))
+        self.assertEqual(b, Tensor([5,6,7]))
+        self.assertEqual(res, Tensor([10,18,28]))
+
+    def test_mul_shape_mismatch(self):
+        a = Tensor([1,2])
+        b = Tensor([1,2,3])
+
+        with self.assertRaises(ValueError):
+            a * b
+
+    def test_mul_empty_tensors(self):
+        a = Tensor([])
+        b = Tensor([])
+
+        self.assertEqual(a * b, Tensor([]))
+
+    
