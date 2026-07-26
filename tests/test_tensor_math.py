@@ -246,4 +246,83 @@ class TestTensorMultiplication(unittest.TestCase):
 
         self.assertEqual(a * b, Tensor([]))
 
-    
+class TestTensorDivision(unittest.TestCase):
+
+    def test_div_1d_tensors(self):
+        a = Tensor([10,18,28])
+        b = Tensor([2,3,4])
+        res = a / b
+
+        self.assertEqual(
+            res,
+            Tensor([5.0,6.0,7.0])
+        )
+
+    def test_div_2d_tensors(self):
+        a = Tensor([
+            [10,20],
+            [30,40]
+        ])
+        b = Tensor([
+            [2,4],
+            [5,8]
+        ])
+
+        res = a / b
+
+        self.assertEqual(
+            res,
+            Tensor([
+                [5.0,5.0],
+                [6.0,5.0]
+            ])
+        )
+
+    def test_div_floats(self):
+        a = Tensor([3.0,10.0])
+        b = Tensor([1.5,2.5])
+        res = a / b
+
+        self.assertEqual(
+            res,
+            Tensor([2.0,4.0])
+        )
+
+    def test_div_negative_numbers(self):
+        a = Tensor([-10,-18,28])
+        b = Tensor([5,-6,7])
+        res = a / b
+
+        self.assertEqual(
+            res,
+            Tensor([-2.0,3.0,4.0])
+        )
+
+    def test_original_tensors_unchange_after_div(self):
+        a = Tensor([10,18,28])
+        b = Tensor([2,3,4])
+        res = a / b
+
+        self.assertEqual(a, Tensor([10,18,28]))
+        self.assertEqual(b, Tensor([2,3,4]))
+        self.assertEqual(res, Tensor([5.0,6.0,7.0]))
+
+    def test_div_shape_mismatch(self):
+        a = Tensor([1,2])
+        b = Tensor([1,2,3])
+
+        with self.assertRaises(ValueError):
+            a / b
+
+    def test_div_by_zero(self):
+        a = Tensor([1,2,3])
+        b = Tensor([1,0,1])
+
+        with self.assertRaises(ZeroDivisionError):
+            a / b 
+
+    def test_div_empty_tensors(self):
+        a = Tensor([])
+        b = Tensor([])
+
+        self.assertEqual(a / b, Tensor([]))

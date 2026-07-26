@@ -210,6 +210,15 @@ class Tensor:
             other,
             lambda a, b: a * b
         )
-    
+
+    def __truediv__(self, other):
+        if not isinstance(other, Tensor):
+            return NotImplemented
+
+        return self._elementwise_operation(
+            other,
+            lambda a, b: a / b
+        )
+
     def __repr__(self):
         return f"Tensor({self.data})"
