@@ -535,3 +535,78 @@ class TestTensorScalarMultiplication(unittest.TestCase):
             Tensor([10,18,28])
         )
 
+class TestTensorScalarDivision(unittest.TestCase):
+
+    def test_div_scalar_int(self):
+        a = Tensor([10,20,30])
+        res = a / 10
+
+        self.assertEqual(
+            res,
+            Tensor([1.0,2.0,3.0])
+        )
+
+    def test_div_scalar_float(self):
+        a = Tensor([3.0,6.0])
+        res = a / 1.5
+
+        self.assertEqual(
+            res,
+            Tensor([2.0,4.0])
+        )
+
+    def test_div_scalar_2d(self):
+        a = Tensor([
+            [20,40],
+            [60,80]
+        ])
+        res = a / 20
+
+        self.assertEqual(
+            res,
+            Tensor([
+                [1.0,2.0],
+                [3.0,4.0]
+            ])
+        )
+
+    def test_div_scalar_negative_values(self):
+        a = Tensor([-10,20])
+        res = a / 5
+
+        self.assertEqual(
+            res,
+            Tensor([-2.0, 4.0])
+        )
+
+    def test_div_scalar_empty_tensor(self):
+        a = Tensor([])
+
+        self.assertEqual(
+            a / 5,
+            Tensor([])
+        )
+
+    def test_div_scalar_by_zero(self):
+        a = Tensor([1,2,3])
+
+        with self.assertRaises(ZeroDivisionError):
+            a / 0
+
+    def test_original_tensor_unchanged_after_scalar_div(self):
+       a = Tensor([10,20,30])
+
+       res = a / 10
+
+       self.assertEqual(a, Tensor([10,20,30]))
+       self.assertEqual(res, Tensor([1.0,2.0,3.0]))
+
+    def test_tensor_division_still_works(self):
+        a = Tensor ([10,18,28])
+        b = Tensor ([2,3,4])
+
+        self.assertEqual(
+            a / b,
+            Tensor([5.0,6.0,7.0])
+        )
+
