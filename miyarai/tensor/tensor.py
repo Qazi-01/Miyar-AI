@@ -128,6 +128,16 @@ class Tensor:
         new_data = self._build_shape(result, self.shape)
 
         return Tensor(new_data)
+
+    def _scalar_operation(self, data, scalar, operation):
+
+        if isinstance (data, list):
+            return[
+                self._scalar_operation(item, scalar, operation)
+                for item in data
+            ]
+
+        return operation(data, scalar)
          
     def __getitem__(self,index):
         return self.data[index]
@@ -187,13 +197,23 @@ class Tensor:
         return self.data == other.data
 
     def __add__(self, other):
-        if not isinstance(other, Tensor):
-            return NotImplemented
+        if isinstance(other, Tensor):
+            return self._elementwise_operation(
+                other,
+                lambda a, b: a + b
+            )
 
-        return self._elementwise_operation(
-            other,
-            lambda a, b: a + b
-        )
+        if isinstance(other,(int, float)):
+            new_data = self._scalar_operation(
+                self.data,
+                other,
+                lambda a, b: a + b
+            )
+
+            return Tensor(new_data)
+
+        return NotImplemented
+        
     def __sub__(self, other):
         if not isinstance(other, Tensor):
             return NotImplemented

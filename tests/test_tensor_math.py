@@ -326,3 +326,72 @@ class TestTensorDivision(unittest.TestCase):
         b = Tensor([])
 
         self.assertEqual(a / b, Tensor([]))
+
+class TestTensorScalarAddition(unittest.TestCase):
+
+    def test_add_scalar_int(self):
+        a = Tensor([1,2,3])
+        res = a + 5
+
+        self.assertEqual(
+            res,
+            Tensor([6,7,8])
+        )
+
+    def test_add_scalar_float(self):
+        a = Tensor([1.5, 2.5])
+        res = a + 2.0
+
+        self.assertEqual(
+            res,
+            Tensor([3.5,4.5])
+        )
+
+    def test_add_scalar_2d(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+        res = a + 10
+
+        self.assertEqual(
+            res,
+            Tensor([
+                [11,12],
+                [13,14]
+            ])
+        )
+
+    def test_add_scalar_negative_values(self):
+        a = Tensor([-2,5])
+        res = a + 3
+
+        self.assertEqual(
+            res,
+            Tensor([1,8])
+        )
+
+    def test_add_scalar_empty_tensor(self):
+        a = Tensor([])
+
+        self.assertEqual(
+            a + 5,
+            Tensor([])
+        )
+
+    def test_original_tensor_unchanged_after_scalar_add(self):
+        a = Tensor([1,2,3])
+        res = a + 5
+
+        self.assertEqual(a, Tensor([1,2,3]))
+        self.assertEqual(res, Tensor([6,7,8]))
+
+    def test_tensor_addition_still_works(self):
+        a = Tensor([1,2,3])
+        b = Tensor([4,5,6])
+
+        self.assertEqual(
+            a + b,
+            Tensor([5,7,9])
+        )
+
