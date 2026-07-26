@@ -814,3 +814,115 @@ class TestTensorMin(unittest.TestCase):
         self.assertEqual(a, Tensor([5,2,8]))
         self.assertEqual(res, 2)
 
+class TestTensorMatMul(unittest.TestCase):
+
+    def test_matmul_2x2(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        b = Tensor([
+            [5,6],
+            [7,8]
+        ])
+
+        self.assertEqual(
+            a@b, 
+            Tensor([
+                [19,22],
+                [43,50]
+            ])
+        )
+
+    def test_matmul_2x3_3x2(self):
+        a = Tensor([
+            [1,2,3],
+            [4,5,6]
+        ])
+
+        b = Tensor([
+            [7,8],
+            [9,10],
+            [11,12]
+        ])
+
+        self.assertEqual(
+            a@b,
+            Tensor([
+                [58,64],
+                [139,154]
+            ])
+        )
+
+    def test_matmul_identity(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        identity = Tensor([
+            [1,0],
+            [0,1]
+        ])
+
+        self.assertEqual(
+            a@ identity,
+            Tensor([
+                [1,2],
+                [3,4]
+            ])
+        )
+
+    def test_matmul_invalid_dimensions(self):
+        a = Tensor([1,2,3])
+        b = Tensor([4,5,6])
+
+        with self.assertRaises(ValueError):
+            a @ b
+
+    def test_matmul_shape_mismatch(self):
+        a = Tensor([
+            [1,2]
+        ])
+        b = Tensor([
+            [1,2]
+        ])
+
+        with self.assertRaises(ValueError):
+            a @ b
+
+    def test_matmul_does_not_modify_operands(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+        b = Tensor([
+            [5,6],
+            [7,8]
+        ])
+
+        res = a @ b
+
+        self.assertEqual(
+            a,
+            Tensor([
+                [1,2],
+                [3,4]
+            ])
+        )
+        self.assertEqual(
+            b,
+            Tensor([
+                [5,6],
+                [7,8]
+            ])
+        )
+        self.assertEqual(
+            res,
+            Tensor([
+                [19,22],
+                [43,50]
+            ])
+        )
+

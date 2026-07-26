@@ -268,6 +268,44 @@ class Tensor:
             return Tensor(new_data)
         return NotImplemented
 
+    def __matmul__(self, other):
+
+        if not isinstance(other, Tensor):
+            return NotImplemented
+
+        if self.ndim != 2 or other.ndim != 2:
+            raise ValueError(
+                "Matrix multiplication is only supported for 2D tensors."
+            )
+
+        if self.shape[1] != other.shape[0]:
+            raise ValueError(
+                f"Cannot multiply matrices with shapes {self.shape} and {other.shape}."
+            )
+
+        rows = self.shape[0]
+        cols = other.shape[1]
+        common = self.shape[1]
+
+        result = []
+
+        for i in range(rows):
+            new_row = []
+
+            for j in range(cols):
+                value = 0
+
+                for k in range(common):
+                    value += (
+                        self.data[i][k]
+                        * other.data[k][j]
+                    )
+
+                new_row.append(value)
+            result.append(new_row)        
+        return Tensor(result)
+    
+
     def sum(self):
         total = 0
         values = self._flatten(self.data)
