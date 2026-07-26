@@ -288,6 +288,13 @@ class Tensor:
 
         flat = self._flatten(self.data)
         return max(flat)
+
+    def min(self):
+        if self.size == 0:
+            return None
+
+        flat = self._flatten(self.data)
+        return min(flat)
     
     def __repr__(self):
         return f"Tensor({self.data})"

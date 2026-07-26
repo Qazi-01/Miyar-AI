@@ -767,3 +767,50 @@ class TestTensorMax(unittest.TestCase):
         self.assertEqual(a, Tensor([1,5,3]))
         self.assertEqual(res, 5)
 
+class TestTensorMin(unittest.TestCase):
+
+    def test_min_1d_tensor(self):
+        a = Tensor([5,2,8])
+        self.assertEqual(
+            a.min(),
+            2
+        )
+
+    def test_min_2d_tensor(self):
+        a = Tensor([
+            [5,1],
+            [8,3]
+        ])
+        self.assertEqual(
+            a.min(),
+            1
+        )
+
+    def test_min_float_tensor(self):
+        a = Tensor([3.5,1.2,7.8])
+        self.assertEqual(
+            a.min(),
+            1.2
+        )
+
+    def test_min_negative_values(self):
+        a = Tensor([-5,-2,-9])
+        self.assertEqual(
+            a.min(),
+            -9
+        )
+
+    def test_min_empty_tensor(self):
+        a = Tensor([])
+        self.assertEqual(
+            a.min(),
+            None
+        )
+
+    def test_min_does_not_modify_original_tensor(self):
+        a = Tensor([5,2,8])
+        res = a.min()
+
+        self.assertEqual(a, Tensor([5,2,8]))
+        self.assertEqual(res, 2)
+
