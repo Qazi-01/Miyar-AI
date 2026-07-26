@@ -462,3 +462,76 @@ class TestTensorScalarSubtraction(unittest.TestCase):
             Tensor([4,5,6])
         )
 
+class TestTensorScalarMultiplication(unittest.TestCase):
+    def test_mul_scalar_int(self):
+        a = Tensor([2,3,4])
+        res = a * 5
+
+        self.assertEqual(
+            res,
+            Tensor([10,15,20])
+        )
+
+    def test_mul_scalar_float(self):
+        a = Tensor([1.5, 2.5])
+        res = a * 2.0
+
+        self.assertEqual(
+            res,
+            Tensor([3.0,5.0])
+        )
+
+    def test_mul_scalar_2d(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+        res = a * 10
+
+        self.assertEqual(
+            res,
+            Tensor([
+                [10,20],
+                [30,40]
+            ])
+        )
+
+    def test_mul_scalar_negative_numbers(self):
+        a = Tensor([-2,5])
+        res = a * 3
+
+        self.assertEqual(
+            res,
+            Tensor([-6,15])
+        )
+
+    def test_mul_scalar_zero(self):
+        a = Tensor ([5,6,7])
+        self.assertEqual(
+            a * 0,
+            Tensor([0,0,0])
+        )
+
+    def test_mul_scalar_empty_tensor(self):
+        a = Tensor([])
+        self.assertEqual(
+            a * 5,
+            Tensor([])
+        )
+
+    def test_original_tensor_unchanged_after_scalar_mul(self):
+        a = Tensor([2,3,4])
+        res = a * 5
+
+        self.assertEqual(a, Tensor([2,3,4]))
+        self.assertEqual(res, Tensor([10,15,20]))
+
+    def test_tensor_multiplication_still_works(self):
+        a = Tensor([2,3,4])
+        b = Tensor([5,6,7])
+
+        self.assertEqual(
+            a*b,
+            Tensor([10,18,28])
+        )
+
