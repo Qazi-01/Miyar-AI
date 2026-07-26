@@ -667,3 +667,57 @@ class TestTensorSum(unittest.TestCase):
             res,
             6
         )
+
+class TestTensorMean(unittest.TestCase):
+
+    def test_mean_1d_tensor(self):
+        a = Tensor([2,4,6])
+
+        self.assertEqual(
+            a.mean(),
+            4
+        )
+
+    def test_mean_float_tensor(self):
+        a = Tensor([1.5,2.5,3.5])
+
+        self.assertEqual(
+            a.mean(),
+            2.5
+        )
+
+    def test_mean_2d_tensor(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        self.assertEqual(
+            a.mean(),
+            2.5
+        )
+
+    def test_mean_negative_value(self):
+        a = Tensor([-2,4,6])
+
+        self.assertEqual(
+            a.mean(),
+            2.6666666666666665
+        )
+
+    def test_mean_empty_tensor(self):
+        a = Tensor([])
+
+        self.assertEqual(
+            a.mean(),
+            0
+        )
+
+    def test_mean_does_not_modify_tensor(self):
+        a = Tensor([1,2,3])
+        res = a.mean()
+
+        self.assertEqual(a, Tensor([1,2,3]))
+        self.assertEqual(res, 2.0)
+
+    

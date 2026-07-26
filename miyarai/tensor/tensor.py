@@ -275,7 +275,12 @@ class Tensor:
             total += value
 
         return total
-    
+
+    def mean(self):
+        if self.size == 0:
+            return 0
+
+        return self.sum() / self.size
 
     def __repr__(self):
         return f"Tensor({self.data})"
