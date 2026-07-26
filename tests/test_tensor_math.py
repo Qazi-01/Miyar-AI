@@ -720,4 +720,50 @@ class TestTensorMean(unittest.TestCase):
         self.assertEqual(a, Tensor([1,2,3]))
         self.assertEqual(res, 2.0)
 
-    
+class TestTensorMax(unittest.TestCase):
+
+    def test_max_1d_tensor(self):
+        a = Tensor([1,5,3])
+        self.assertEqual(
+            a.max(),
+            5
+        )
+
+    def test_max_2d_tensor(self):
+        a = Tensor([
+            [1,8],
+            [3,4]
+        ])
+        self.assertEqual(
+            a.max(),
+            8
+        )
+
+    def test_max_float_tensor(self):
+        a = Tensor([1.5,7.2,3.8])
+        self.assertEqual(
+            a.max(),
+            7.2
+        )
+
+    def test_max_negative_values(self):
+        a = Tensor([-10,-3,-7])
+        self.assertEqual(
+            a.max(),
+            -3
+        )
+
+    def test_max_empty_tensor(self):
+        a = Tensor([])
+        self.assertEqual(
+            a.max(),
+            None
+        )
+
+    def test_max_does_not_modify_original_tensor(self):
+        a = Tensor([1,5,3])
+        res = a.max()
+
+        self.assertEqual(a, Tensor([1,5,3]))
+        self.assertEqual(res, 5)
+
