@@ -268,5 +268,14 @@ class Tensor:
             return Tensor(new_data)
         return NotImplemented
 
+    def sum(self):
+        total = 0
+        values = self._flatten(self.data)
+        for value in values:
+            total += value
+
+        return total
+    
+
     def __repr__(self):
         return f"Tensor({self.data})"

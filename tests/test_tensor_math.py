@@ -610,3 +610,60 @@ class TestTensorScalarDivision(unittest.TestCase):
             Tensor([5.0,6.0,7.0])
         )
 
+class TestTensorSum(unittest.TestCase):
+
+    def test_sum_1d_tensor(self):
+        a = Tensor([1,2,3,4])
+
+        self.assertEqual(
+            a.sum(),
+            10
+        )
+
+    def test_sum_2d_tensor(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        self.assertEqual(
+            a.sum(),
+            10
+        )
+
+    def test_sum_sloat_tensor(self):
+        a = Tensor([1.5,2.5,3.0])
+
+        self.assertEqual(
+            a.sum(),
+            7.0
+        )
+
+    def test_sum_negative_value(self):
+        a = Tensor([-5,2,3])
+
+        self.assertEqual(
+            a.sum(),
+            0
+        )
+
+    def test_sum_empty_tensor(self):
+        a = Tensor([])
+
+        self.assertEqual(
+            a.sum(),
+            0
+        )
+
+    def test_sum_does_not_modify_tensor(self):
+        a = Tensor([1,2,3])
+        res = a.sum()
+
+        self.assertEqual(
+            a,
+            Tensor([1,2,3])
+        )
+        self.assertEqual(
+            res,
+            6
+        )
