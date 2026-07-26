@@ -215,13 +215,24 @@ class Tensor:
         return NotImplemented
         
     def __sub__(self, other):
-        if not isinstance(other, Tensor):
-            return NotImplemented
-        return self._elementwise_operation(
-            other,
-            lambda a, b: a - b
-        )
+        if isinstance(other, Tensor):
+        
+            return self._elementwise_operation(
+                other,
+                lambda a, b: a - b
+            )
 
+        if isinstance(other,(int, float)):
+            new_data = self._scalar_operation(
+                self.data,
+                other,
+                lambda a, b: a - b
+            )
+
+            return Tensor(new_data)
+        
+        return NotImplemented
+    
     def __mul__(self, other):
         if not isinstance(other, Tensor):
             return NotImplemented

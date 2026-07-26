@@ -395,3 +395,70 @@ class TestTensorScalarAddition(unittest.TestCase):
             Tensor([5,7,9])
         )
 
+class TestTensorScalarSubtraction(unittest.TestCase):
+
+    def test_sub_scalar_int(self):
+        a = Tensor([5,6,7])
+        res = a - 2
+
+        self.assertEqual(
+            res,
+            Tensor([3,4,5])
+        )
+
+    def test_sub_scalar_float(self):
+        a = Tensor([3.5,4.5])
+        res = a - 1.5
+
+        self.assertEqual(
+            res,
+            Tensor([2.0,3.0])
+        )
+
+    def test_sub_scalar_2d(self):
+        a = Tensor([
+            [10,20],
+            [30,40]
+        ])
+        res = a - 5
+
+        self.assertEqual(
+            res,
+            Tensor([
+                [5,15],
+                [25,35]
+            ])
+        )
+
+    def test_sub_scalar_negative_values(self):
+        a = Tensor([-2,5])
+        res = a - 3
+
+        self.assertEqual(
+            res,
+            Tensor([-5,2])
+        )
+
+    def test_sub_scalar_empty_tensor(self):
+        a = Tensor([])
+        self.assertEqual(
+            a - 5,
+            Tensor([])
+        )
+
+    def test_original_tensor_unchanged_after_scalar_sub(self):
+        a = Tensor([5,6,7])
+        res = a - 2
+
+        self.assertEqual(a, Tensor([5,6,7]))
+        self.assertEqual(res, Tensor([3,4,5]))
+
+    def test_tensor_subtraction_still_works(self):
+        a = Tensor([5,7,9])
+        b = Tensor([1,2,3])
+
+        self.assertEqual(
+            a - b,
+            Tensor([4,5,6])
+        )
+
