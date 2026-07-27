@@ -342,6 +342,24 @@ class Tensor:
         return Tensor(
             self._flatten(self.data)
         )
+
+    def squeeze(self):
+        #return copy of tensor with all dimension of size 1 removed
+
+        def squeeze_recursive(data):
+            while isinstance (data,list) and len(data) == 1:
+                data = data[0]
+
+            if isinstance(data, list):
+                return[
+                    squeeze_recursive(item)
+                    for item in data
+                ]
+            return data
+        return Tensor(
+            squeeze_recursive(self.data)
+        )
+
     
 
     def __matmul__(self, other):

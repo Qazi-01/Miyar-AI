@@ -1069,3 +1069,58 @@ class TestTensorFlatten(unittest.TestCase):
             Tensor([1,2,3,4])
         )
 
+class TestTensorSqueeze(unittest.TestCase):
+
+    def test_squeeze_1d(self):
+        a = Tensor([[1,2,3]])
+        res = a.squeeze()
+
+        self.assertEqual(res.data, [1,2,3])
+        self.assertEqual(res.shape, (3,))
+
+    def test_squeeze_multiple(self):
+        a = Tensor ([
+            [[1]],
+            [[2]],
+            [[3]]
+        ])
+        res = a.squeeze()
+
+        self.assertEqual(res.data, [1,2,3])
+        self.assertEqual(res.shape, (3,))
+
+    def test_squeeze_no_change(self):
+        a = Tensor([1,2,3])
+        res = a.squeeze()
+
+        self.assertEqual(res.data, [1,2,3])
+        self.assertEqual(res.shape, (3,))
+
+    def test_squeeze_matrix(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+        res = a.squeeze()
+
+        self.assertEqual(
+            res.data, [
+                [1,2],
+                [3,4]
+            ])
+        self.assertEqual(res.shape, (2,2))
+
+    def test_squeeze_scalar(self):
+        a = Tensor([[[42]]])
+        res = a.squeeze()
+
+        self.assertEqual(res.data, 42)
+        self.assertEqual(res.shape, ())
+
+    def test_squeeze_not_inplace(self):
+        a = Tensor([[1,2,3]])
+        res = a.squeeze()
+
+        self.assertEqual(a.data, [[1,2,3]])
+        self.assertEqual(res.data, [1,2,3])
+
