@@ -1004,3 +1004,68 @@ class TestTensorBroadcasting(unittest.TestCase):
         with self.assertRaises(ValueError):
             a + b
 
+class TestTensorFlatten(unittest.TestCase):
+
+    def test_flatten_1d(self):
+        a = Tensor([1,2,3])
+
+        self.assertEqual(
+            a.flatten(),
+            Tensor([1,2,3])
+        )
+
+    def Test_flatten_2d(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        self.assertEqual(
+            a.flatten(),
+            Tensor([1,2,3,4])
+        )
+
+    def test_flatten_3d(self):
+        a = Tensor([
+            [
+                [1,2],
+                [3,4]
+            ],
+            [
+                [5,6],
+                [7,8]
+            ]
+        ])
+
+        self.assertEqual(
+            a.flatten(),
+            Tensor([1,2,3,4,5,6,7,8])
+        )
+
+    def test_flatten_empty(self):
+        a = Tensor([])
+        self.assertEqual(
+            a.flatten(),
+            Tensor([])
+        )
+
+    def test_flatten_does_not_modify_original(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+        b = a.flatten()
+
+        self.assertEqual(
+            a,
+            Tensor([
+                [1,2],
+                [3,4]
+            ])
+        )
+
+        self.assertEqual(
+            b,
+            Tensor([1,2,3,4])
+        )
+

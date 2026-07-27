@@ -338,6 +338,12 @@ class Tensor:
             return Tensor(new_data)
         return NotImplemented
 
+    def flatten(self):
+        return Tensor(
+            self._flatten(self.data)
+        )
+    
+
     def __matmul__(self, other):
 
         if not isinstance(other, Tensor):
@@ -406,3 +412,5 @@ class Tensor:
     
     def __repr__(self):
         return f"Tensor({self.data})"
+
+    
