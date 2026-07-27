@@ -408,6 +408,55 @@ class Tensor:
         new_data = [tensor.data for tensor in tensors]
         return Tensor(new_data)
 
+    def concat(tensors, axis=0):
+
+        if not tensors:
+            raise ValueError("Cannot concatenate an empty list of tensors.")
+
+        if not all(isinstance(tensor, Tensor)for tensor in tensors):
+            raise TypeError("All elements must be Tensor objects")
+
+        reference_shape = tensors[0].shape
+        ndim = len(reference_shape)
+
+        if axis < -ndim or axis >= ndim:
+            raise ValueError("Axis out of range.")
+
+        if axis < 0:
+            axis += ndim 
+
+        for tensor in tensors:
+            if len(tensor.shape) != ndim:
+                raise ValueError("All tensors must have same number of dimensions.")
+
+            for i in range(ndim):
+                if i != axis and tensor.shape[i] != reference_shape[i]:
+                    raise ValueError(
+                        "All tensors must have the same shape except along the concatenation axis."
+                    )
+        def concat_recursive(data_list, current_axis):
+            if current_axis == 0:
+                result = []
+                for data in data_list:
+                    result.extend(data)
+                return result
+
+            return [
+                concat_recursive(
+                    [data[i] for data in data_list],
+                    current_axis - 1
+                )
+                for i in range(len(data_list[0]))
+            ]
+        new_data = concat_recursive(
+            [tensor.data for tensor in tensors],
+            axis
+        )
+
+        return Tensor(new_data)
+
+
+
     def __matmul__(self, other):
 
         if not isinstance(other, Tensor):

@@ -1233,3 +1233,92 @@ class TestTensorStack(unittest.TestCase):
                 axis=1
             )
 
+class TestTensorConcat(unittest.TestCase):
+
+    def test_concat_1d(self):
+        a = Tensor([1, 2, 3])
+        b = Tensor([4, 5, 6])
+
+        result = Tensor.concat([a, b])
+
+        self.assertEqual(result.shape, (6,))
+        self.assertEqual(result.data, [1, 2, 3, 4, 5, 6])
+
+    def test_concat_axis_0(self):
+        a = Tensor([[1, 2], [3, 4]])
+        b = Tensor([[5, 6], [7, 8]])
+
+        result = Tensor.concat([a, b], axis=0)
+
+        self.assertEqual(result.shape, (4, 2))
+        self.assertEqual(
+            result.data,
+            [
+                [1, 2],
+                [3, 4],
+                [5, 6],
+                [7, 8]
+            ]
+        )
+
+    def test_concat_axis_1(self):
+        a = Tensor([[1, 2], [3, 4]])
+        b = Tensor([[5, 6], [7, 8]])
+
+        result = Tensor.concat([a, b], axis=1)
+
+        self.assertEqual(result.shape, (2, 4))
+        self.assertEqual(
+            result.data,
+            [
+                [1, 2, 5, 6],
+                [3, 4, 7, 8]
+            ]
+        )
+
+    def test_concat_negative_axis(self):
+        a = Tensor([[1, 2], [3, 4]])
+        b = Tensor([[5, 6], [7, 8]])
+
+        result = Tensor.concat([a, b], axis=-1)
+
+        self.assertEqual(result.shape, (2, 4))
+
+    def test_concat_single_tensor(self):
+        a = Tensor([1, 2, 3])
+
+        result = Tensor.concat([a])
+
+        self.assertEqual(result.shape, (3,))
+        self.assertEqual(result.data, [1, 2, 3])
+        self.assertIsNot(result, a)
+
+    def test_concat_empty(self):
+        with self.assertRaises(ValueError):
+            Tensor.concat([])
+
+    def test_concat_non_tensor(self):
+        with self.assertRaises(TypeError):
+            Tensor.concat([Tensor([1, 2]), 5])
+
+    def test_concat_shape_mismatch(self):
+        a = Tensor([[1, 2]])
+        b = Tensor([[3, 4], [5, 6]])
+
+        with self.assertRaises(ValueError):
+            Tensor.concat([a, b], axis=1)
+
+    def test_concat_invalid_positive_axis(self):
+        a = Tensor([1, 2])
+        b = Tensor([3, 4])
+
+        with self.assertRaises(ValueError):
+            Tensor.concat([a, b], axis=1)
+
+    def test_concat_invalid_negative_axis(self):
+        a = Tensor([1, 2])
+        b = Tensor([3, 4])
+
+        with self.assertRaises(ValueError):
+            Tensor.concat([a, b], axis=-2)
+
