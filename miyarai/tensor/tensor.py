@@ -360,6 +360,31 @@ class Tensor:
             squeeze_recursive(self.data)
         )
 
+    def unsqueeze(self, axis):
+
+        if axis < -(self.ndim + 1):
+            raise ValueError("Axis out of range")
+
+        if axis < 0:
+            axis += self.ndim + 1
+
+        if axis > self.ndim:
+            raise ValueError("Axis out of range")
+    
+        def insert_axis(data, current_axis):
+            if current_axis == 0:
+                return [data]
+
+            if isinstance(data, list):
+                return [
+                    insert_axis(item, current_axis - 1)
+                    for item in data
+                ]
+
+            return [data]
+        new_data = insert_axis(self.data, axis)
+
+        return Tensor(new_data)
     
 
     def __matmul__(self, other):

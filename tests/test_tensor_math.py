@@ -1124,3 +1124,68 @@ class TestTensorSqueeze(unittest.TestCase):
         self.assertEqual(a.data, [[1,2,3]])
         self.assertEqual(res.data, [1,2,3])
 
+class TestTensorUnsqueezed(unittest.TestCase):
+
+    def test_unsqueeze_axis_0(self):
+        a = Tensor([[1,2],[3,4]])
+        res = a.unsqueeze(0)
+
+        self.assertEqual(res.shape, (1,2,2))
+
+    def test_unsqueeze_axis_1(self):
+        a = Tensor([[1,2],[3,4]])
+        res = a.unsqueeze(1)
+
+        self.assertEqual(res.shape, (2,1,2))
+
+    def test_unsqueeze_axis_2(self):
+        a = Tensor([[1,2],[3,4]])
+        res = a.unsqueeze(2)
+
+        self.assertEqual(res.shape, (2,2,1))
+
+    def test_unsqueeze_negative_axis_1(self):
+        a = Tensor([[1,2],[3,4]])
+        res = a.unsqueeze(-1)
+
+        self.assertEqual(res.shape, (2,2,1))
+
+    def test_unsqueeze_negative_axis_2(self):
+        a = Tensor([[1,2],[3,4]])
+        res = a.unsqueeze(-2)
+
+        self.assertEqual(res.shape, (2,1,2))
+
+    def test_unsqueeze_negative_axis_3(self):
+        a = Tensor([[1,2],[3,4]])
+        res = a.unsqueeze(-3)
+
+        self.assertEqual(res.shape, (1,2,2))
+
+    def test_unsqueeze_returns_new_tensor(self):
+        a = Tensor([[1, 2], [3, 4]])
+        result = a.unsqueeze(0)
+
+        self.assertIsNot(a, result)
+        self.assertEqual(a.shape, (2, 2))
+        self.assertEqual(result.shape, (1, 2, 2))
+
+    def test_unsqueeze_does_not_modify_original(self):
+        a = Tensor([[1,2],[3,4]])
+        res = a.unsqueeze(1)
+
+        self.assertEqual(a.shape, (2,2))
+        self.assertEqual(a.data, [[1,2],[3,4]])
+
+    def test_unsqueeze_invalid_positive_axis(self):
+        a = Tensor([[1,2],[3,4]])
+
+        with self.assertRaises(ValueError):
+            a.unsqueeze(3)
+
+    def test_unsqueeze_invalid_negative_axis(self):
+        a = Tensor([[1,2],[3,4]])
+
+        with self.assertRaises(ValueError):
+            a.unsqueeze(-4)
+
