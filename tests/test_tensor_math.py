@@ -1189,3 +1189,47 @@ class TestTensorUnsqueezed(unittest.TestCase):
         with self.assertRaises(ValueError):
             a.unsqueeze(-4)
 
+class TestTensorStack(unittest.TestCase):
+    def test_stack_1d(self):
+        a = Tensor([1,2,3])
+        b = Tensor([4,5,6])
+
+        res = Tensor.stack([a,b])
+
+        self.assertEqual(res.shape, (2,3))
+        self.assertEqual(res.data,
+                         [[1,2,3],
+                          [4,5,6]])
+
+    def test_stack_2d(self):
+        a = Tensor([[1,2],[3,4]])
+        b = Tensor([[5,6],[7,8]])
+
+        res = Tensor.stack([a,b])
+        self.assertEqual(res.shape, (2,2,2))
+
+    def test_empty_stack(self):
+        with self.assertRaises(ValueError):
+            Tensor.stack([])
+
+    def test_non_tensor(self):
+        with self.assertRaises(TypeError):
+            Tensor.stack([Tensor([1]), 5])
+
+    def test_different_shapes(self):
+        with self.assertRaises(ValueError):
+            Tensor.stack([
+                Tensor([1,2]),
+                Tensor([[3,4]])
+            ])
+
+    def test_axis_not_implemented(self):
+        with self.assertRaises(NotImplementedError):
+            Tensor.stack(
+                [
+                    Tensor([1,2]),
+                    Tensor([3,4])
+                ],
+                axis=1
+            )
+

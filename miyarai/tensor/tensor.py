@@ -385,7 +385,28 @@ class Tensor:
         new_data = insert_axis(self.data, axis)
 
         return Tensor(new_data)
-    
+
+    def stack(tensors, axis=0):
+
+        if not tensors:
+            raise ValueError("Cannot stack an empty list of tensors")
+
+        if not all(isinstance(tensor,Tensor) for tensor in tensors):
+            raise TypeError("All elements must be tensor object.")
+
+        reference_shape = tensors[0].shape
+
+        for tensor in tensors:
+            if tensor.shape != reference_shape:
+                raise ValueError("All tensors must have the same shape.")
+
+        if axis != 0:
+            raise NotImplementedError(
+                "stack() currently supports only axis = 0"
+            )
+
+        new_data = [tensor.data for tensor in tensors]
+        return Tensor(new_data)
 
     def __matmul__(self, other):
 
