@@ -82,12 +82,14 @@ class TestTensorAddition(unittest.TestCase):
             a + b
 
 
-    def test_add_dimension_mismatch(self):
+    def test_add_dimension_broadcast(self):
         a = Tensor([[1, 2]])
         b = Tensor([1, 2])
 
-        with self.assertRaises(ValueError):
-            a + b
+        self.assertEqual(
+            a + b,
+            Tensor([[2,4]])
+        )
 
 
     def test_add_empty_tensors(self):
@@ -925,4 +927,80 @@ class TestTensorMatMul(unittest.TestCase):
                 [43,50]
             ])
         )
+
+class TestTensorBroadcasting(unittest.TestCase):
+
+    def test_vector_single_element(self):
+        a = Tensor([1,2,3])
+        b = Tensor([10])
+
+        self.assertEqual(
+            a + b,
+            Tensor([11,12,13])
+        )
+
+    def test_column_row_addition(self):
+        a = Tensor([
+            [1],
+            [2],
+            [3]
+        ])
+
+        b = Tensor([10,20,30])
+
+        self.assertEqual(
+            a + b,
+            Tensor([
+                [11,21,31],
+                [12,22,32],
+                [13,23,33]
+            ])
+        )
+
+    def test_matrix_row_adition(self):
+        a = Tensor([
+            [1,2,3],
+            [4,5,6]
+        ])
+
+        b = Tensor([10,20,30])
+
+        self.assertEqual(
+            a + b,
+            Tensor([
+                [11,22,33],
+                [14,25,36]
+            ])
+        )
+
+    def test_matrix_column_multiplication(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        b = Tensor([
+            [10],
+            [20]
+        ])
+
+        self.assertEqual(
+            a * b,
+            Tensor([
+                [10,20],
+                [60,80]
+            ])
+        )
+
+    def test_broadcast_imcompatible_shapes(self):
+        a = Tensor([
+            [1,2]
+        ])
+
+        b = Tensor([
+            [1,2,3]
+        ])
+
+        with self.assertRaises(ValueError):
+            a + b
 

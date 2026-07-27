@@ -113,21 +113,91 @@ class Tensor:
                 f"Cannot operate on tensors with shapes {self.shape} and {other.shape}."
             )
 
+    def _broadcast_shape(self, shape1, shape2):
+        shape1 = (1,) * (len(shape2) - len(shape1)) + shape1
+        shape2 = (1,) * (len(shape1) - len(shape2)) + shape2
+
+        result = []
+
+        for dim1, dim2 in zip(shape1,shape2):
+            if dim1 == dim2:
+                result.append(dim1)
+            elif dim1 == 1:
+                result.append(dim2)
+            elif dim2 == 1:
+                result.append(dim1)
+            else:
+                raise ValueError(
+                    f"Cannot broadcast shapes {shape1} and {shape2}."
+                )
+        return tuple(result)
+
+    def _expand_to_shape(self,data,current_shape,target_shape):
+
+        if current_shape == target_shape:
+            return data
+
+        # prepend leading dimension of size 1
+        while len(current_shape) < len(target_shape):
+            data = [data]
+            current_shape = (1,) + current_shape
+
+        def expand(d, current, target):
+            if len(current) == 0:
+                return d
+
+            if current[0] == target[0]:
+                return [ 
+                    expand(item, current[1:], target[1:])
+                    for item in d
+                ]
+
+            if current[0] == 1:
+                expanded = expand(d[0], current[1:], target[1:])
+                return [
+                    expanded
+                    for _ in range(target[0])
+                ]
+
+            raise ValueError(
+                f"Cannot expand shape {current_shape} to {target_shape}."
+            )
+        return expand(data, current_shape, target_shape)
+
 
     def _elementwise_operation(self, other, operation):
-        self._check_same_shape(other)
+        target_shape = self._broadcast_shape(
+            self.shape,
+            other.shape
+        )
 
-        flat_self = self._flatten(self.data)
-        flat_other = self._flatten(other.data)
+        left = self._expand_to_shape(
+            self.data,
+            self.shape,
+            target_shape
+        )
+
+        right = self._expand_to_shape(
+            other.data,
+            other.shape,
+            target_shape
+        )
+
+        flat_left = self._flatten(left)
+        flat_right = self._flatten(right)
 
         result = [
-            operation(a, b)
-            for a, b in zip(flat_self, flat_other)
+            operation(a,b)
+            for a,b in zip(flat_left, flat_right)
         ]
 
-        new_data = self._build_shape(result, self.shape)
+        new_data = self._build_shape(
+            result,
+            target_shape
+        )
 
         return Tensor(new_data)
+    
 
     def _scalar_operation(self, data, scalar, operation):
 
