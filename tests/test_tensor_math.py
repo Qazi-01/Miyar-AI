@@ -1440,3 +1440,74 @@ class TestTensorSplit(unittest.TestCase):
                 3
             )
 
+class TestTensorRepeat(unittest.TestCase):
+
+    def test_repeat_1d(self):
+        a = Tensor([1,2,3])
+        res = a.repeat(2)
+
+        self.assertEqual(
+            res.data,
+            [1,1,2,2,3,3]
+        )
+
+    def test_repeat_2d(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+        res = a.repeat(2)
+
+        self.assertEqual(
+            res.data,
+            [
+                [1,1,2,2],
+                [3,3,4,4]
+            ]
+        )
+
+    def test_repeat_once(self):
+        a = Tensor([5,6,7])
+        res = a.repeat(1)
+
+        self.assertEqual(
+            res.data,
+            [5,6,7]
+        )
+
+    def test_repeat_empty(self):
+        a = Tensor([])
+        res = a.repeat(3)
+
+        self.assertEqual(
+            res.data,
+            []
+        )
+
+    def test_repeat_returns_new_tensor(self):
+        a = Tensor([1,2,3])
+        res = a.repeat(2)
+
+        self.assertIsNot(a, res)
+
+    def test_repeat_does_not_modify_original(self):
+        a = Tensor([1,2,3])
+        res = a.repeat(2)
+
+        self.assertEqual(
+            a.data,
+            [1,2,3]
+        )
+
+    def test_repeat_invalid_zero(self):
+        with self.assertRaises(ValueError):
+            Tensor([1,2]).repeat(0)
+
+    def test_repeat_invalid_negative(self):
+        with self.assertRaises(ValueError):
+            Tensor([1,2]).repeat(-1)
+
+    def test_repeat_invalid_type(self):
+        with self.assertRaises(TypeError):
+            Tensor([1,2]).repeat(2.5)
+

@@ -386,6 +386,33 @@ class Tensor:
 
         return Tensor(new_data)
 
+
+    def repeat(self, repeats):
+
+        if not isinstance(repeats, int):
+            raise TypeError("Repeats must be an integer.")
+
+        if repeats <= 0:
+            raise ValueError("Repeats must be getter than zero.")
+
+        def repeat_recursive(data):
+            if isinstance(data, list):
+                return [
+                    item
+                    for element in data
+                    for item in(
+                        [repeat_recursive(element)] * repeats
+                        if not isinstance(element, list)
+                        else [repeat_recursive(element)]
+                    )
+                ]
+            return data
+        new_data = repeat_recursive(self.data)
+
+        return Tensor(new_data)
+
+    
+    
     def stack(tensors, axis=0):
 
         if not tensors:
@@ -505,7 +532,7 @@ class Tensor:
         split_data = split_recursive(tensor.data, axis)
         return [Tensor(part) for part in split_data]
 
-  
+
 
     def __matmul__(self, other):
 
