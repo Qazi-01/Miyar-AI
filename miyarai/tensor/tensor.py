@@ -411,8 +411,35 @@ class Tensor:
 
         return Tensor(new_data)
 
-    
-    
+    def tile(self, repeats):
+        if not isinstance(repeats, int):
+            raise TypeError("Repeats must be integer.")
+        if repeats <= 0:
+            raise ValueError("Repeats must be greater than zero.")
+
+        def deep_copy(data):
+            if isinstance(data,list):
+                return [deep_copy(item) for item in data]
+            return data
+
+        if isinstance(self.data, list):
+            new_data = []
+
+            for i in range(repeats):
+                copied = deep_copy(self.data)
+
+                if self.ndim == 1:
+                    new_data.extend(copied)
+                else:
+                    new_data.extend(copied)
+
+        else:
+            new_data = [self.data for i in range(repeats)]
+
+        return Tensor(new_data)
+
+
+
     def stack(tensors, axis=0):
 
         if not tensors:

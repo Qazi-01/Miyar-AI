@@ -1511,3 +1511,66 @@ class TestTensorRepeat(unittest.TestCase):
         with self.assertRaises(TypeError):
             Tensor([1,2]).repeat(2.5)
 
+class TestTensorTile(unittest.TestCase):
+
+    def test_tile_1d(self):
+        a = Tensor([1,2,3])
+        res = a.tile(2)
+
+        self.assertEqual(res.data,[1,2,3,1,2,3])
+
+    def test_tile_2d(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+        res = a.tile(2)
+
+        self.assertEqual(
+            res.data,
+            [
+                [1,2],
+                [3,4],
+                [1,2],
+                [3,4]
+            ]
+        )
+
+    def test_tile_once(self):
+        a = Tensor([5,6])
+        res = a.tile(1)
+
+        self.assertEqual(
+            res.data,
+            [5,6]
+        )
+
+    def test_tile_empty(self):
+        a = Tensor([])
+        res = a.tile(3)
+
+        self.assertEqual(res.data, [])
+
+    def test_tile_return_new_tensor(self):
+        a = Tensor([1,2,3])
+        res = a.tile(2)
+        self.assertIsNot(a, res)
+
+    def test_tile_does_not_modify_original(self):
+        a = Tensor([1,2,3])
+        res = a.tile(2)
+
+        self.assertEqual(a.data, [1,2,3])
+
+    def test_tile_invalid_zero(self):
+        with self.assertRaises(ValueError):
+            Tensor([1,2]).tile(0)
+
+    def test_tile_invalid_negative(self):
+        with self.assertRaises(ValueError):
+            Tensor([1,2]).tile(-1)
+
+    def test_tile_invalid_type(self):
+        with self.assertRaises(TypeError):
+            Tensor([1,2]).tile(2.5)
+
