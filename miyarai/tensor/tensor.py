@@ -455,7 +455,57 @@ class Tensor:
 
         return Tensor(new_data)
 
+    def split(tensor, sections, axis=0):
 
+        if not isinstance(tensor, Tensor):
+            raise TypeError("Input must be a Tensor.")
+
+        if sections <= 0:
+            raise ValueError("Sections must be greater than zero.")
+
+        ndim = tensor.ndim
+
+        if axis < -ndim or axis >= ndim:
+            raise ValueError("Axis out of range.")
+
+        if axis < 0:
+            axis += ndim
+
+        axis_size = tensor.shape[axis]
+
+        if axis_size % sections != 0:
+            raise ValueError(
+                "Tensor cannot be evenly split into the requested number of sections."
+            )
+        
+        chunk_size = axis_size // sections
+
+        def split_recursive(data, current_axis):
+            if current_axis == 0:
+                return [
+                    data[i:i + chunk_size]
+                    for i in range(0, len(data), chunk_size)
+                ]
+
+            child_split = [
+                split_recursive(item, current_axis - 1)
+                for item in data
+            ]
+
+            result = []
+
+            for section in range(sections):
+                result.append([
+                    child[section]
+                    for child in child_split
+                ])
+
+            return result
+
+        split_data = split_recursive(tensor.data, axis)
+        return [Tensor(part) for part in split_data]
+
+  
 
     def __matmul__(self, other):
 

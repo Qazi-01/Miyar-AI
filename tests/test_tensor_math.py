@@ -1322,3 +1322,121 @@ class TestTensorConcat(unittest.TestCase):
         with self.assertRaises(ValueError):
             Tensor.concat([a, b], axis=-2)
 
+class TestTensorSplit(unittest.TestCase):
+
+    def test_split_1d(self):
+        a = Tensor([1,2,3,4,5,6])
+        res = Tensor.split(a, 3)
+
+        self.assertEqual(len(res), 3)
+        self.assertEqual(res[0].data, [1,2])
+        self.assertEqual(res[1].data, [3,4])
+        self.assertEqual(res[2].data, [5,6])
+
+    def test_split_axis_0(self):
+        a = Tensor ([
+            [1,2],
+            [3,4],
+            [5,6],
+            [7,8]
+        ])
+        res = Tensor.split(a, 2, axis=0)
+
+        self.assertEqual(res[0].shape, (2,2))
+        self.assertEqual(res[1].shape, (2,2))
+        self.assertEqual(
+            res[0].data,
+            [
+                [1,2],
+                [3,4]
+            ]            
+        )
+        self.assertEqual(
+            res[1].data,
+            [
+                [5,6],
+                [7,8]
+            ]
+        )
+
+    def test_split_axis_1(self):
+        a =Tensor([
+            [1,2],
+            [3,4],
+            [5,6],
+            [7,8]
+        ])
+        res = Tensor.split(a, 2, axis=1)
+        self.assertEqual(res[0].shape, (4,1))
+        self.assertEqual(res[1].shape, (4,1))
+        self.assertEqual(
+            res[0].data,
+            [
+                [1],
+                [3],
+                [5],
+                [7]
+            ]
+        )
+        self.assertEqual(
+            res[1].data,
+            [
+                [2],
+                [4],
+                [6],
+                [8]
+            ]
+        )
+
+    def test_split_negative_axis(self):
+        a = Tensor([
+            [1,2],
+            [3,4],
+            [5,6],
+            [7,8]
+        ])
+        res = Tensor.split(a, 2, axis = -1)
+        self.assertEqual(res[0].shape, (4,1))
+        self.assertEqual(res[1].shape, (4,1))
+
+    def test_split_single_section(self):
+        a = Tensor([1,2,3])
+        res = Tensor.split(a,1)
+        self.assertEqual(len(res), 1)
+        self.assertEqual(res[0].data, [1,2,3])
+        self.assertIsNot(res[0], a)
+
+    def test_split_invalid_sections(self):
+        with self.assertRaises(ValueError):
+            Tensor.split(Tensor([1,2]),0)
+
+    def test_split_uneven(self):
+        with self.assertRaises(ValueError):
+            Tensor.split(
+                Tensor([1,2,3,4,5]),
+                2
+            )
+
+    def test_split_invalid_positive_axis(self):
+        with self.assertRaises(ValueError):
+            Tensor.split(
+                Tensor([1,2,3]),
+                3,
+                axis = 1
+            )
+
+    def test_split_invalid_negative_axis(self):
+        with self.assertRaises(ValueError):
+            Tensor.split(
+                Tensor([1,2,3]),
+                3,
+                axis = -2
+            )
+
+    def test_split_non_tensor(self):
+        with self.assertRaises(TypeError):
+            Tensor.split(
+                [1,2,3],
+                3
+            )
+
