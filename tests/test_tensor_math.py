@@ -101,8 +101,7 @@ class TestTensorAddition(unittest.TestCase):
         self.assertEqual(result, Tensor([]))
 
 
-if __name__ == "__main__":
-    unittest.main()
+
 
 #res means result
 
@@ -1574,3 +1573,72 @@ class TestTensorTile(unittest.TestCase):
         with self.assertRaises(TypeError):
             Tensor([1,2]).tile(2.5)
 
+class TestTensorGetItem(unittest.TestCase):
+
+    def test_getitem_1d(self):
+        a = Tensor([10,20,30])
+
+        self.assertEqual(a[0], 10)
+        self.assertEqual(a[1], 20)
+        self.assertEqual(a[2], 30)
+
+    def test_getItem_negative_index(self):
+        a = Tensor([10,20,30])
+        self.assertEqual(a[-1], 30)
+        self.assertEqual(a[-2], 20)
+
+    def test_getitem_2d_returns_tensor(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+        self.assertEqual(
+            a[0],
+            Tensor([1,2])
+        )
+        self.assertEqual(
+            a[1],
+            Tensor([3,4])
+        )
+
+    def test_getitem_chained_indexing(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        self.assertEqual(a[0][1], 2)
+        self.assertEqual(a[1][0], 3)
+
+    def tets_getitem_invalid_index_type(self):
+        a = Tensor([1,2,3])
+        with self.assertRaises(TypeError):
+            a['0']
+
+    def test_getitem_out_of_range(self):
+        a = Tensor([1,2,3])
+        with self.assertRaises(IndexError):
+            a[5]
+
+    def test_getitem_does_not_modify_original(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+        row = a[0]
+
+        self.assertEqual(
+            a,
+            Tensor([
+                [1,2],
+                [3,4]
+            ])
+        )
+
+        self.assertEqual(row, Tensor([1,2]))
+
+    
+
+
+if __name__ == "__main__":
+    unittest.main()

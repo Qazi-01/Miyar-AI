@@ -12,6 +12,9 @@ class Tensor:
         self.size = self._calculate_size(self.shape)
         self.dtype = self._infer_dtype(data)
 
+    def __repr__(self):
+        return f"Tensor({self.data})"
+
     def _validate_shape(self, data):
 
         if not isinstance(data, list):
@@ -210,8 +213,16 @@ class Tensor:
         return operation(data, scalar)
          
     def __getitem__(self,index):
-        return self.data[index]
+       if not isinstance(index, int):
+           raise TypeError("Tensor indices must be integers.")
 
+       result = self.data[index]
+
+       if isinstance(result, list):
+           return Tensor(result)
+
+       return result
+    
     def __setitem__(self, index, value):
         self.data[index] = value
     
@@ -438,8 +449,7 @@ class Tensor:
 
         return Tensor(new_data)
 
-
-
+    @staticmethod
     def stack(tensors, axis=0):
 
         if not tensors:
@@ -462,6 +472,7 @@ class Tensor:
         new_data = [tensor.data for tensor in tensors]
         return Tensor(new_data)
 
+    @staticmethod
     def concat(tensors, axis=0):
 
         if not tensors:
@@ -509,6 +520,7 @@ class Tensor:
 
         return Tensor(new_data)
 
+    @staticmethod
     def split(tensor, sections, axis=0):
 
         if not isinstance(tensor, Tensor):
@@ -627,7 +639,4 @@ class Tensor:
         flat = self._flatten(self.data)
         return min(flat)
     
-    def __repr__(self):
-        return f"Tensor({self.data})"
-
     
