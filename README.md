@@ -2,39 +2,70 @@
 
 An educational deep learning framework written entirely from scratch in Python.
 
-MiyarAI is built to demonstrate how modern deep learning frameworks work internally without relying on PyTorch or TensorFlow internals. Every component is implemented from first principles using Python.
+MiyarAI is built to demonstrate how modern deep learning frameworks work internally without relying on PyTorch or TensorFlow internals. Every component is implemented from first principles using pure Python, making the code easy to read, understand, and extend.
 
-> **Current Version:** v0.1.0 
+> **Current Version:** v0.2.0
 
 ---
 
-## Features
+# Features
 
-Current features include:
+## Tensor Core
 
-- Custom Tensor class
+- Custom `Tensor` class
 - Shape inference
 - Shape validation
 - Data type inference
+- Tensor cloning
 - Tensor reshaping
 - Matrix transpose
-- Tensor cloning
-- Pythonic indexing and iteration
+- Pythonic indexing
+- Pythonic iteration
 
-More features will be added in future releases.
+## Math Engine
+
+- Tensor addition
+- Tensor subtraction
+- Tensor multiplication
+- Tensor division
+- Scalar arithmetic
+- Broadcasting
+- Matrix multiplication
+- Sum reduction
+- Mean reduction
+- Maximum reduction
+- Minimum reduction
+
+## Tensor Manipulation
+
+- `flatten()`
+- `squeeze()`
+- `unsqueeze()`
+- `repeat()`
+- `tile()`
+- `stack()`
+- `concat()`
+- `split()`
+
+## Indexing
+
+- Integer indexing
+- Slice indexing
+- Tuple indexing
+- Basic advanced indexing
 
 ---
 
-## Installation
+# Installation
 
-Clone the repository:
+Clone the repository
 
 ```bash
 git clone https://github.com/Qazi-01/Miyar-AI.git
 cd Miyar-AI
 ```
 
-Install in editable mode:
+Install in editable mode
 
 ```bash
 pip install -e .
@@ -42,34 +73,59 @@ pip install -e .
 
 ---
 
-## Requirements
+# Requirements
 
-- Python 3.12 or newer
+- Python 3.12+
 
 ---
 
-## Quick Example
+# Quick Example
 
 ```python
 from miyarai import Tensor
 
-x = Tensor([
+a = Tensor([
     [1, 2],
     [3, 4]
 ])
 
-print(x)
+b = Tensor([
+    [5, 6],
+    [7, 8]
+])
 
-print(x.shape)
+print(a + b)
 
-print(x.transpose())
+print(a @ b)
+
+print(a.sum())
+
+print(a.mean())
+
+print(a.flatten())
+
+print(a[0])
+
+print(a[:, 1])
+```
+
+Output
+
+```text
+Tensor([[6, 8], [10, 12]])
+Tensor([[19, 22], [43, 50]])
+10
+2.5
+Tensor([1, 2, 3, 4])
+Tensor([1, 2])
+Tensor([2, 4])
 ```
 
 ---
 
-## Project Structure
+# Project Structure
 
-```
+```text
 Miyar-AI/
 │
 ├── examples/
@@ -89,69 +145,116 @@ Miyar-AI/
 
 ---
 
-## Roadmap
+# Roadmap
 
-### v0.1 — Tensor Core
+## ✅ v0.1 — Tensor Core
 
 - [x] Tensor class
 - [x] Shape inference
 - [x] Shape validation
-- [x] Tensor cloning
+- [x] Data type inference
+- [x] Clone
 - [x] Reshape
 - [x] Transpose
 
-### v0.2 — Math Engine
+---
 
-- [ ] Tensor addition
-- [ ] Tensor subtraction
-- [ ] Tensor multiplication
-- [ ] Tensor division
-- [ ] Matrix multiplication
-- [ ] Sum
-- [ ] Mean
+## ✅ v0.2 — Math Engine
 
-### v0.3 — Computational Graph
+- [x] Tensor addition
+- [x] Tensor subtraction
+- [x] Tensor multiplication
+- [x] Tensor division
+- [x] Scalar operations
+- [x] Broadcasting
+- [x] Matrix multiplication
+- [x] Sum
+- [x] Mean
+- [x] Max
+- [x] Min
+- [x] Flatten
+- [x] Squeeze
+- [x] Unsqueeze
+- [x] Repeat
+- [x] Tile
+- [x] Stack
+- [x] Concat
+- [x] Split
+- [x] Integer indexing
+- [x] Slice indexing
+- [x] Tuple indexing
+- [x] Basic advanced indexing
 
-- [ ] Graph nodes
-- [ ] Operation tracking
+---
+
+##  v0.3 — Automatic Differentiation
+
+- [ ] Computational graph
 - [ ] Gradient storage
-
-### v0.4 — Automatic Differentiation
-
 - [ ] Backpropagation
 - [ ] Chain rule
 - [ ] Gradient accumulation
 
-### v0.5 — Neural Networks
+---
+
+##  v0.4 — Neural Network API
 
 - [ ] Module
 - [ ] Parameter
-- [ ] Linear
+- [ ] Linear layer
 - [ ] Sequential
+- [ ] Activation functions
 
 ---
 
-## Running Tests
+##  v0.5 — Optimizers
+
+- [ ] SGD
+- [ ] Momentum
+- [ ] Adam
+- [ ] Learning rate schedulers
+
+---
+
+# Running Tests
+
+Run the complete test suite
 
 ```bash
-python -m unittest discover tests
+python -m unittest discover -s tests
+```
+
+Current status
+
+```text
+203 tests passing
 ```
 
 ---
 
-## Dependencies
+# Dependencies
 
-MiyarAI v0.1.0 uses only the Python standard library.
-No third-party dependencies are required.
+MiyarAI currently depends only on the Python Standard Library.
 
----
-
-## Contributing
-
-Contributions, issues and feature requests are welcome.
+No external numerical libraries such as NumPy, PyTorch, or TensorFlow are used internally.
 
 ---
 
-## License
+# Philosophy
 
-This project is licensed under the GNU General Public License v3.0.
+MiyarAI prioritizes clarity over performance.
+
+Every algorithm is implemented manually so readers can understand how modern deep learning frameworks operate internally before relying on optimized libraries.
+
+---
+
+# Contributing
+
+Contributions, bug reports, and feature requests are welcome.
+
+---
+
+# License
+
+Licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
+

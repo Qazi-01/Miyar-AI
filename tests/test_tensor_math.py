@@ -1637,7 +1637,314 @@ class TestTensorGetItem(unittest.TestCase):
 
         self.assertEqual(row, Tensor([1,2]))
 
-    
+class TestTensorSetItem(unittest.TestCase):
+
+    def test_setitem_1d(self):
+        a = Tensor([1, 2, 3])
+
+        a[0] = 10
+
+        self.assertEqual(
+            a,
+            Tensor([10, 2, 3])
+        )
+
+    def test_setitem_negative_index(self):
+        a = Tensor([1, 2, 3])
+
+        a[-1] = 99
+
+        self.assertEqual(
+            a,
+            Tensor([1, 2, 99])
+        )
+
+    def test_setitem_2d_row(self):
+        a = Tensor([
+            [1, 2],
+            [3, 4]
+        ])
+
+        a[1] = [8, 9]
+
+        self.assertEqual(
+            a,
+            Tensor([
+                [1, 2],
+                [8, 9]
+            ])
+        )
+
+    def test_setitem_tensor_value(self):
+        a = Tensor([
+            [1, 2],
+            [3, 4]
+        ])
+
+        a[0] = Tensor([7, 8])
+
+        self.assertEqual(
+            a,
+            Tensor([
+                [7, 8],
+                [3, 4]
+            ])
+        )
+
+    def test_setitem_nested(self):
+        a = Tensor([
+            [1, 2],
+            [3, 4]
+        ])
+
+        a[0][1] = 99
+
+        self.assertEqual(
+            a,
+            Tensor([
+                [1, 99],
+                [3, 4]
+            ])
+        )
+
+    def test_setitem_invalid_index_type(self):
+        a = Tensor([1, 2, 3])
+
+        with self.assertRaises(TypeError):
+            a["0"] = 10
+
+    def test_setitem_index_out_of_range(self):
+        a = Tensor([1, 2, 3])
+
+        with self.assertRaises(IndexError):
+            a[10] = 5
+
+class TestTensorSlicing(unittest.TestCase):
+
+    def test_slice_1d(self):
+        a = Tensor([1,2,3,4,5])
+        self.assertEqual(
+            a[1:4],
+            Tensor([2,3,4])
+        )
+
+    def test_slicing_from_start(self):
+        a = Tensor([1,2,3,4,5])
+        self.assertEqual(
+            a[:3],
+            Tensor([1,2,3])
+        )
+
+    def test_slicing_to_end(self):
+        a = Tensor([1,2,3,4,5])
+        self.assertEqual(
+            a[2:],
+            Tensor([3,4,5])
+        )
+
+    def test_slice_full(self):
+        a = Tensor([1,2,3])
+        self.assertEqual(
+            a[:],
+            Tensor([1,2,3])
+        )
+
+    def test_slice_step(self):
+        a = Tensor([1,2,3,4,5])
+        self.assertEqual(
+            a[::2],
+            Tensor([1,3,5])
+        )
+
+    def test_slice_reverse(self):
+        a = Tensor([1,2,3,4])
+        self.assertEqual(
+            a[::-1],
+            Tensor([4,3,2,1])
+        )
+
+    def test_slice_empty(self):
+        a = Tensor([1,2,3])
+        self.assertEqual(
+            a[10:],
+            Tensor([])
+        )
+
+    def test_slice_2d(self):
+        a = Tensor([
+            [1,2],
+            [3,4],
+            [5,6]
+        ])
+        self.assertEqual(
+            a[1:],
+            Tensor([
+                [3,4],
+                [5,6]
+            ])
+        )
+
+    def test_slice_returns_new_tensor(self):
+        a = Tensor([1,2,3])
+        res = a[1:]
+        self.assertIsNot(a, res)
+
+    def test_slice_does_not_modify_original(self):
+        a = Tensor([1,2,3])
+        res = a[1:]
+
+        self.assertEqual(
+            a,
+            Tensor([1,2,3])
+        )
+
+        self.assertEqual(
+            res,
+            Tensor([2,3])
+        )
+
+    def test_slice_invalid_index_type(self):
+        a = Tensor([1,2,3])
+
+        with self.assertRaises(TypeError):
+            a[1.5]
+
+class TestTensorTupleIndexing(unittest.TestCase):
+
+    def test_tuple_index_2d(self):
+        a = Tensor([
+            [1,2,3],
+            [4,5,6]
+        ])
+
+        self.assertEqual(a[0,0],1)
+        self.assertEqual(a[0,2],3)
+        self.assertEqual(a[1,1],5)
+
+    def test_tuple_index_3d(self):
+        a = Tensor([
+            [
+                [1,2],
+                [3,4]
+            ],
+            [
+                [5,6],
+                [7,8]
+            ]
+        ])
+
+        self.assertEqual(a[0,1,0],3)
+        self.assertEqual(a[1,0,1],6)
+
+    def test_tuple_returns_tensor_when_result_is_list(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        res = a[0]
+        self.assertIsInstance(res, Tensor)
+        self.assertEqual(res, Tensor([1,2]))
+
+    def test_tuple_ivalid_index_type(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+        with self.assertRaises(TypeError):
+            a[0,"1"]
+
+    def test_tuple_too_many_indices(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        with self.assertRaises(IndexError):
+            a[0,1,2]
+
+    def test_tuple_does_not_modify_tensor(self):
+        a = Tensor([
+            [1,2],
+            [3,4]
+        ])
+
+        res = a[1,0]
+
+        self.assertEqual(
+            a,
+            Tensor([
+                [1,2],
+                [3,4]
+            ])
+        )
+
+class TestTensorAdvancedIndexing(unittest.TestCase):
+
+    def test_advanced_indexing_basic(self):
+        a = Tensor([10,20,30,40])
+
+        self.assertEqual(
+            a[[0,2]],
+            Tensor([10,30])
+        )
+
+    def test_advanced_indexing_order(self):
+        a = Tensor([10,20,30,40])
+
+        self.assertEqual(
+            a[[3,1]],
+            Tensor([40,20])
+        )
+
+    def test_advance_indexing_single(self):
+        a = Tensor([10,20,30])
+
+        self.assertEqual(
+            a[[1]],
+            Tensor([20])
+        )
+
+    def test_advanced_indexing_empty(self):
+        a = Tensor([10,20,30])
+
+        self.assertEqual(
+            a[[]],
+            Tensor([])
+        )
+
+    def test_advanced_indexing_invalid_type(self):
+        a = Tensor([10,20,30])
+
+        with self.assertRaises(TypeError):
+            a[[0,"1"]]
+
+    def test_advanced_indexing_invalid_strings(self):
+        a = Tensor([10,20,30])
+
+        with self.assertRaises(TypeError):
+            a[["0"]]
+
+    def test_advanced_indexing_returns_new_tensor(self):
+        a = Tensor([10,20,30])
+        res = a[[0,2]]
+
+        self.assertIsNot(res, a)
+
+    def test_advanced_indexing_does_not_modify_original(self):
+        a = Tensor([10,20,30])
+        res = a[[0,2]]
+
+        self.assertEqual(
+            a,
+            Tensor([10,20,30])
+        )
+
+
+
+
+
+
 
 
 if __name__ == "__main__":

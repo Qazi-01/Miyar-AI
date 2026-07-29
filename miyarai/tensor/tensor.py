@@ -211,20 +211,73 @@ class Tensor:
             ]
 
         return operation(data, scalar)
+
+    def _tuple_index(self, data, indices):
+
+        if len(indices) == 0:
+            return data
+
+        if not isinstance(data, list):
+            raise IndexError("Too many indices for tensor.")
+        index = indices[0]
+
+        if not isinstance(index, int):
+            raise TypeError(
+                "Tuple indexing currently supports only integers."
+            )
+
+        return self._tuple_index(
+            data[index],
+            indices[1:]
+        )
+
          
     def __getitem__(self,index):
-       if not isinstance(index, int):
-           raise TypeError("Tensor indices must be integers.")
+        if isinstance(index, tuple):
+           result = self._tuple_index(
+               self.data,
+               index
+           )
 
-       result = self.data[index]
+        elif isinstance(index, int):
+           result = self.data[index]
 
-       if isinstance(result, list):
-           return Tensor(result)
+        elif isinstance(index, slice):
+            result = self.data[index]
 
-       return result
+        elif isinstance(index, list):
+
+            if not all(isinstance(i, int) for i in index):
+                raise TypeError(
+                    "Advance indexing currently only supports only integer lists."
+                )
+
+            result = [
+                self.data[i]
+                for i in index
+            ]
+
+        else:
+            raise TypeError(
+                'Tensor indices must be integers, slices, tuples, or integer lists.'
+            )
+        
+        if isinstance(result, list):
+            return Tensor(result)
+
+        return result
+    
     
     def __setitem__(self, index, value):
+        if not isinstance(index, int):
+            raise TypeError(
+                "Tensor indices must be integers."
+            )
+        if isinstance(value, Tensor):
+            value = value.data
+
         self.data[index] = value
+    
     
     def __len__(self):
         return len(self.data)
