@@ -222,6 +222,10 @@ class Tensor:
         result._op = op
 
         return result
+
+    @property
+    def is_leaf(self):
+        return len(self.parents) == 0
     
 
     def _tuple_index(self, data, indices):

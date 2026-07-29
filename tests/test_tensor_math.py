@@ -2536,6 +2536,65 @@ class TestBroadcastGraphRecording(unittest.TestCase):
         self.assertEqual(c.parents, (a,))
         self.assertEqual(c._op, "/")
 
+class TestLeafTensorLogic(unittest.TestCase):
+
+    def test_new_tensor_is_leaf(self):
+        a = Tensor([1,2,3])
+        self.assertTrue(a.is_leaf)
+
+    def test_tensor_frim_addition_is_not_leaf(self):
+        a = Tensor([1,2])
+        b = Tensor([3,4])
+
+        c = a + b
+
+        self.assertFalse(c.is_leaf)
+
+    def test_tensor_from_subtractiom_is_not_leaf(self):
+        a = Tensor([5,4])
+        b = Tensor([2,1])
+
+        self.assertFalse((a-b).is_leaf)
+
+    def test_tensor_from_multiplication_is_not_leaf(self):
+        a = Tensor([2,3])
+        b = Tensor([4,5])
+
+        self.assertFalse((a*b).is_leaf)
+
+    def test_tensor_from_division_is_not_leaf(self):
+        a = Tensor([8,20])
+        b = Tensor([2,5])
+
+        self.assertFalse((a/b).is_leaf)
+
+    def test_tensor_from_scalarar_operation_is_not_leaf(self):
+        a = Tensor([1,2])
+
+        self.assertFalse((a + 5).is_leaf)
+
+    def test_is_leaf_uses_parents(self):
+        a = Tensor([1])
+
+        self.assertEqual(
+            a.is_leaf,
+            len(a.parents) == 0
+        )
+
+    def test_leaf_tensor_has_empty_parents(self):
+        a = Tensor([1])
+
+        self.assertEqual(a.parents, ())
+        self.assertTrue([a.is_leaf])
+
+    def test_operation_tensor_has_parents(self):
+        a = Tensor([1])
+        b = Tensor([2])
+
+        c = a + b
+
+        self.assertNotEqual(c.parents,())
+        self.assertFalse(c.is_leaf)    
 
 
 
