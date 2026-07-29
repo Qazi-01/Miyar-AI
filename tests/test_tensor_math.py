@@ -2054,6 +2054,121 @@ class TestTensorBackwardPlaceholder(unittest.TestCase):
         a._backward()
         self.assertEqual(a.tolist(), [1,2,3])
 
+class TestAdditionGraphRecording(unittest.TestCase):
+
+    def test_add_records_parents(self):
+        a = Tensor([1, 2])
+        b = Tensor([3, 4])
+
+        c = a + b
+
+        self.assertEqual(c.parents, (a, b))
+
+    def test_add_records_operation(self):
+        a = Tensor([1, 2])
+        b = Tensor([3, 4])
+
+        c = a + b
+
+        self.assertEqual(c._op, "+")
+
+    def test_add_propagates_requires_grad_left(self):
+        a = Tensor([1, 2], requires_grad=True)
+        b = Tensor([3, 4])
+
+        c = a + b
+
+        self.assertTrue(c.requires_grad)
+
+    def test_add_propagates_requires_grad_right(self):
+        a = Tensor([1, 2])
+        b = Tensor([3, 4], requires_grad=True)
+
+        c = a + b
+
+        self.assertTrue(c.requires_grad)
+
+    def test_add_propagates_requires_grad_both(self):
+        a = Tensor([1, 2], requires_grad=True)
+        b = Tensor([3, 4], requires_grad=True)
+
+        c = a + b
+
+        self.assertTrue(c.requires_grad)
+
+    def test_add_requires_grad_false_when_both_false(self):
+        a = Tensor([1, 2])
+        b = Tensor([3, 4])
+
+        c = a + b
+
+        self.assertFalse(c.requires_grad)
+
+    def test_add_keeps_grad_none(self):
+        a = Tensor([1, 2], requires_grad=True)
+        b = Tensor([3, 4])
+
+        c = a + b
+
+        self.assertIsNone(c.grad)
+
+    def test_add_keeps_backward_callable(self):
+        a = Tensor([1, 2])
+        b = Tensor([3, 4])
+
+        c = a + b
+
+        self.assertTrue(callable(c._backward))
+
+    def test_add_does_not_modify_inputs(self):
+        a = Tensor([1, 2], requires_grad=True)
+        b = Tensor([3, 4])
+
+        _ = a + b
+
+        self.assertEqual(a.parents, ())
+        self.assertEqual(b.parents, ())
+        self.assertIsNone(a._op)
+        self.assertIsNone(b._op)
+        self.assertIsNone(a.grad)
+        self.assertIsNone(b.grad)
+
+    def test_add_returns_correct_values(self):
+        a = Tensor([1, 2])
+        b = Tensor([3, 4])
+
+        c = a + b
+
+        self.assertEqual(c.tolist(), [4, 6])
+
+    def test_scalar_add_records_parent(self):
+        a = Tensor([1, 2], requires_grad=True)
+
+        c = a + 5
+
+        self.assertEqual(c.parents, (a,))
+
+    def test_scalar_add_records_operation(self):
+        a = Tensor([1, 2])
+
+        c = a + 5
+
+        self.assertEqual(c._op, "+")
+
+    def test_scalar_add_propagates_requires_grad(self):
+        a = Tensor([1, 2], requires_grad=True)
+
+        c = a + 5
+
+        self.assertTrue(c.requires_grad)
+
+    def test_scalar_add_returns_correct_values(self):
+        a = Tensor([1, 2])
+
+        c = a + 5
+
+        self.assertEqual(c.tolist(), [6, 7])
+
 
 
 

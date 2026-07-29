@@ -216,6 +216,13 @@ class Tensor:
             ]
 
         return operation(data, scalar)
+    
+    def _record_graph(self,result, parents, op):
+        result.parents = parents
+        result._op = op
+
+        return result
+    
 
     def _tuple_index(self, data, indices):
 
@@ -337,19 +344,38 @@ class Tensor:
 
     def __add__(self, other):
         if isinstance(other, Tensor):
-            return self._elementwise_operation(
+            result = self._elementwise_operation(
                 other,
                 lambda a, b: a + b
             )
 
-        if isinstance(other,(int, float)):
+            result.requires_grad = (
+                self.requires_grad or other.requires_grad
+            )
+
+            return self._record_graph(
+                result=result,
+                parents=(self, other),
+                op="+",
+            )
+
+        if isinstance(other, (int, float)):
             new_data = self._scalar_operation(
                 self.data,
                 other,
                 lambda a, b: a + b
             )
 
-            return Tensor(new_data)
+            result = Tensor(
+                new_data,
+                requires_grad=self.requires_grad,
+            )
+
+            return self._record_graph(
+                result=result,
+                parents=(self,),
+                op="+",
+            )
 
         return NotImplemented
         
