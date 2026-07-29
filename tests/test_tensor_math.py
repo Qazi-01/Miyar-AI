@@ -1962,10 +1962,28 @@ class TestTensorRequiresGrad(unittest.TestCase):
         a = Tensor([1,2,3], requires_grad=True)
         self.assertEqual(a.tolist(), [1,2,3])
 
+class TestTensorGrad(unittest.TestCase):
 
+    def test_grad_defualts_to_none(self):
+        a = Tensor([1,2,3])
+        self.assertIsNone(a.grad)
 
+    def test_grad_none_when_requires_grad_true(self):
+        a = Tensor([1,2,3], requires_grad = True)
+        self.assertIsNone(a.grad)
 
+    def test_requires_grad_unchanged(self):
+        a = Tensor([1,2,3], requires_grad=True)
+        self.assertTrue(a.requires_grad)
+        self.assertIsNone(a.grad)
 
+    def test_grad_attribute_exists(self):
+        a = Tensor([1,2,3])
+        self.assertTrue(hasattr(a,"grad"))
+
+    def test_grad_does_not_modify_tensor_data(self):
+        a = Tensor([1,2,3], requires_grad= True)
+        self.assertEqual(a.tolist(),[1,2,3])
 
 
 

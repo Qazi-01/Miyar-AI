@@ -12,8 +12,8 @@ class Tensor:
         self.size = self._calculate_size(self.shape)
         self.dtype = self._infer_dtype(data)
         self.requires_grad = bool(requires_grad)
+        self.grad = None
 
-        
     def __repr__(self):
         return f"Tensor({self.data})"
 
