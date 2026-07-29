@@ -2030,6 +2030,30 @@ class TestTensorOperation(unittest.TestCase):
         self.assertEqual(a.parents, ())
         self.assertIsNone(a._op)
 
+class TestTensorBackwardPlaceholder(unittest.TestCase):
+
+    def test_backward_attribute_wxists(self):
+        a = Tensor([1,2,3])
+        self.assertTrue(hasattr(a,"_backward"))
+
+    def test_backward_is_callable(self):
+        a = Tensor([1,2,3])
+        self.assertTrue(callable(a._backward))
+
+    def test_backward_returns_none(self):
+        a = Tensor([1,2,3])
+        self.assertIsNone(a._backward())
+
+    def test_backward_does_not_modify_grad(self):
+        a = Tensor([1,2,3], requires_grad=True)
+        a._backward()
+        self.assertIsNone(a.grad)
+
+    def test_backward_does_not_modify_data(self):
+        a = Tensor([1,2,3])
+        a._backward()
+        self.assertEqual(a.tolist(), [1,2,3])
+
 
 
 

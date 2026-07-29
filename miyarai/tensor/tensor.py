@@ -15,7 +15,7 @@ class Tensor:
         self.grad = None
         self.parents = ()
         self._op = None
-
+        self._backward = lambda: None
 
     def __repr__(self):
         return f"Tensor({self.data})"
