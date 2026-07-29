@@ -2268,6 +2268,89 @@ class TestSubtractionGraphRecording(unittest.TestCase):
         self.assertIsNone(a._op)
         self.assertIsNone(b._op)
 
+class TestMultiplicationGraphRecording(unittest.TestCase):
+
+    def test_mul_records_parents(self):
+        a = Tensor([2, 3])
+        b = Tensor([4, 5])
+
+        c = a * b
+
+        self.assertEqual(c.parents, (a, b))
+
+    def test_mul_records_operation(self):
+        a = Tensor([2])
+        b = Tensor([4])
+
+        self.assertEqual((a * b)._op, "*")
+
+    def test_mul_propagates_requires_grad_left(self):
+        a = Tensor([2], requires_grad=True)
+        b = Tensor([4])
+
+        self.assertTrue((a * b).requires_grad)
+
+    def test_mul_propagates_requires_grad_right(self):
+        a = Tensor([2])
+        b = Tensor([4], requires_grad=True)
+
+        self.assertTrue((a * b).requires_grad)
+
+    def test_mul_requires_grad_false_when_both_false(self):
+        a = Tensor([2])
+        b = Tensor([4])
+
+        self.assertFalse((a * b).requires_grad)
+
+    def test_mul_returns_correct_values(self):
+        a = Tensor([2, 3])
+        b = Tensor([4, 5])
+
+        self.assertEqual((a * b).tolist(), [8, 15])
+
+    def test_mul_scalar_records_parent(self):
+        a = Tensor([2, 3], requires_grad=True)
+
+        self.assertEqual((a * 10).parents, (a,))
+
+    def test_mul_scalar_records_operation(self):
+        a = Tensor([2])
+
+        self.assertEqual((a * 10)._op, "*")
+
+    def test_mul_scalar_requires_grad(self):
+        a = Tensor([2], requires_grad=True)
+
+        self.assertTrue((a * 10).requires_grad)
+
+    def test_mul_scalar_returns_correct_values(self):
+        a = Tensor([2, 3])
+
+        self.assertEqual((a * 10).tolist(), [20, 30])
+
+    def test_mul_keeps_grad_none(self):
+        a = Tensor([2], requires_grad=True)
+        b = Tensor([4])
+
+        self.assertIsNone((a * b).grad)
+
+    def test_mul_keeps_backward_callable(self):
+        a = Tensor([2])
+        b = Tensor([4])
+
+        self.assertTrue(callable((a * b)._backward))
+
+    def test_mul_does_not_modify_inputs(self):
+        a = Tensor([2], requires_grad=True)
+        b = Tensor([4])
+
+        _ = a * b
+
+        self.assertEqual(a.parents, ())
+        self.assertEqual(b.parents, ())
+        self.assertIsNone(a._op)
+        self.assertIsNone(b._op)
+
 
 
 

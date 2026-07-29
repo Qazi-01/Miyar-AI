@@ -419,20 +419,41 @@ class Tensor:
     
     def __mul__(self, other):
         if isinstance(other, Tensor):
-            return self._elementwise_operation(
+            result = self._elementwise_operation(
                 other,
-                lambda a, b: a*b
+                lambda a, b: a * b
             )
 
-        if isinstance(other,(int,float)):
+            result.requires_grad = (
+                self.requires_grad or other.requires_grad
+            )
+
+            return self._record_graph(
+                result=result,
+                parents=(self, other),
+                op="*",
+            )
+
+        if isinstance(other, (int, float)):
             new_data = self._scalar_operation(
                 self.data,
                 other,
-                lambda a, b: a*b
+                lambda a, b: a * b
             )
 
-            return Tensor(new_data)
+            result = Tensor(
+                new_data,
+                requires_grad=self.requires_grad,
+            )
+
+            return self._record_graph(
+                result=result,
+                parents=(self,),
+                op="*",
+            )
+
         return NotImplemented
+
     
     def __truediv__(self, other):
 
