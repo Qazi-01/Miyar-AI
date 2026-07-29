@@ -2432,6 +2432,74 @@ class TestDivisionGraphRecording(unittest.TestCase):
         self.assertIsNone(a._op)
         self.assertIsNone(b._op)
 
+class TestMatrixMultiplicationGraphRecording(unittest.TestCase):
+
+    def test_matmul_records_parents(self):
+        a = Tensor([[1, 2], [3, 4]])
+        b = Tensor([[5, 6], [7, 8]])
+
+        c = a @ b
+
+        self.assertEqual(c.parents, (a, b))
+
+    def test_matmul_records_operation(self):
+        a = Tensor([[1]])
+        b = Tensor([[2]])
+
+        self.assertEqual((a @ b)._op, "@")
+
+    def test_matmul_propagates_requires_grad_left(self):
+        a = Tensor([[1]], requires_grad=True)
+        b = Tensor([[2]])
+
+        self.assertTrue((a @ b).requires_grad)
+
+    def test_matmul_propagates_requires_grad_right(self):
+        a = Tensor([[1]])
+        b = Tensor([[2]], requires_grad=True)
+
+        self.assertTrue((a @ b).requires_grad)
+
+    def test_matmul_requires_grad_false_when_both_false(self):
+        a = Tensor([[1]])
+        b = Tensor([[2]])
+
+        self.assertFalse((a @ b).requires_grad)
+
+    def test_matmul_returns_correct_values(self):
+        a = Tensor([[1, 2], [3, 4]])
+        b = Tensor([[5, 6], [7, 8]])
+
+        c = a @ b
+
+        self.assertEqual(
+            c.tolist(),
+            [[19, 22], [43, 50]]
+        )
+
+    def test_matmul_keeps_grad_none(self):
+        a = Tensor([[1]], requires_grad=True)
+        b = Tensor([[2]])
+
+        self.assertIsNone((a @ b).grad)
+
+    def test_matmul_keeps_backward_callable(self):
+        a = Tensor([[1]])
+        b = Tensor([[2]])
+
+        self.assertTrue(callable((a @ b)._backward))
+
+    def test_matmul_does_not_modify_inputs(self):
+        a = Tensor([[1]], requires_grad=True)
+        b = Tensor([[2]])
+
+        _ = a @ b
+
+        self.assertEqual(a.parents, ())
+        self.assertEqual(b.parents, ())
+        self.assertIsNone(a._op)
+        self.assertIsNone(b._op)
+
 
 
 

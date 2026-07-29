@@ -752,7 +752,21 @@ class Tensor:
 
                 new_row.append(value)
             result.append(new_row)        
-        return Tensor(result)
+        result = Tensor(
+            result,
+            requires_grad=(
+                self.requires_grad
+                or other.requires_grad
+            ),
+        )
+
+        return self._record_graph(
+            result=result,
+            parents=(self, other),
+            op = "@"
+        )
+
+
     
 
     def sum(self):
