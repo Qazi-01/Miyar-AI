@@ -1940,6 +1940,29 @@ class TestTensorAdvancedIndexing(unittest.TestCase):
             Tensor([10,20,30])
         )
 
+class TestTensorRequiresGrad(unittest.TestCase):
+
+    def test_defualt_requires_grad_is_false(self):
+        a = Tensor([1,2,3])
+        self.assertFalse(a.requires_grad)
+
+    def test_requires_grad_true(self):
+        a = Tensor([1,2,3], requires_grad = True)
+        self.assertTrue(a.requires_grad)
+
+    def test_requires_grad_false(self):
+        a = Tensor([1,2,3], requires_grad=False)
+        self.assertFalse(a.requires_grad)
+
+    def test_requires_grad_is_boolean(self):
+        a = Tensor([1,2,3], requires_grad = 1)
+        self.assertIs(a.requires_grad, True)
+
+    def test_requires_grad_does_not_change_tensor_data(self):
+        a = Tensor([1,2,3], requires_grad=True)
+        self.assertEqual(a.tolist(), [1,2,3])
+
+
 
 
 

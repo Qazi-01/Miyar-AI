@@ -147,7 +147,7 @@ Miyar-AI/
 
 # Roadmap
 
-## ✅ v0.1 — Tensor Core
+## ✅ v0.1 - Tensor Core
 
 - [x] Tensor class
 - [x] Shape inference
@@ -159,7 +159,7 @@ Miyar-AI/
 
 ---
 
-## ✅ v0.2 — Math Engine
+## ✅ v0.2 - Math Engine
 
 - [x] Tensor addition
 - [x] Tensor subtraction
@@ -187,7 +187,7 @@ Miyar-AI/
 
 ---
 
-##  v0.3 — Automatic Differentiation
+##  v0.3 - Automatic Differentiation
 
 - [ ] Computational graph
 - [ ] Gradient storage
@@ -197,7 +197,7 @@ Miyar-AI/
 
 ---
 
-##  v0.4 — Neural Network API
+##  v0.4 - Neural Network API
 
 - [ ] Module
 - [ ] Parameter
@@ -207,7 +207,7 @@ Miyar-AI/
 
 ---
 
-##  v0.5 — Optimizers
+##  v0.5 - Optimizers
 
 - [ ] SGD
 - [ ] Momentum

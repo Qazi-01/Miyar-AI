@@ -3,7 +3,7 @@ from copy import deepcopy
 
 class Tensor:
 
-    def __init__(self, data):
+    def __init__(self, data, dtype=None, requires_grad=False):
         self._validate_shape(data)
 
         self.data = data
@@ -11,7 +11,9 @@ class Tensor:
         self.ndim = len(self.shape)
         self.size = self._calculate_size(self.shape)
         self.dtype = self._infer_dtype(data)
+        self.requires_grad = bool(requires_grad)
 
+        
     def __repr__(self):
         return f"Tensor({self.data})"
 
