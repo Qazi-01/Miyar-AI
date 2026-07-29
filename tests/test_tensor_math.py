@@ -2501,6 +2501,41 @@ class TestMatrixMultiplicationGraphRecording(unittest.TestCase):
         self.assertIsNone(b._op)
 
 
+class TestBroadcastGraphRecording(unittest.TestCase):
+
+    def test_scalar_add_records_graph(self):
+        a = Tensor([1, 2], requires_grad=True)
+
+        c = a + 5
+
+        self.assertEqual(c.parents, (a,))
+        self.assertEqual(c._op, "+")
+        self.assertTrue(c.requires_grad)
+
+    def test_scalar_sub_records_graph(self):
+        a = Tensor([5, 6], requires_grad=True)
+
+        c = a - 2
+
+        self.assertEqual(c.parents, (a,))
+        self.assertEqual(c._op, "-")
+
+    def test_scalar_mul_records_graph(self):
+        a = Tensor([2, 3], requires_grad=True)
+
+        c = a * 10
+
+        self.assertEqual(c.parents, (a,))
+        self.assertEqual(c._op, "*")
+
+    def test_scalar_div_records_graph(self):
+        a = Tensor([8, 4], requires_grad=True)
+
+        c = a / 2
+
+        self.assertEqual(c.parents, (a,))
+        self.assertEqual(c._op, "/")
+
 
 
 
