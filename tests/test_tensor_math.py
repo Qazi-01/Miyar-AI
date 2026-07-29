@@ -1985,6 +1985,30 @@ class TestTensorGrad(unittest.TestCase):
         a = Tensor([1,2,3], requires_grad= True)
         self.assertEqual(a.tolist(),[1,2,3])
 
+class TestTensorParents(unittest.TestCase):
+
+    def test_parents_defualts_to_empty_tuple(self):
+        a = Tensor([1,2,3])
+        self.assertEqual(a.parents, ())
+
+    def test_parents_exists(self):
+        a = Tensor([1,2,3])
+        self.assertTrue(hasattr(a, "parents"))
+
+    def test_parents_is_tuple(self):
+        a = Tensor([1,2,3])
+        self.assertIsInstance(a.parents, tuple)
+
+    def test_parents_empty_when_requires_grad_true(self):
+        a = Tensor([1,2,3], requires_grad=True)
+        self.assertEqual(a.parents, ())
+
+    def test_parents_does_not_modify_tensor_data(self):
+        a = Tensor([1,2,3])
+        self.assertEqual(a.tolist(), [1,2,3])
+
+
+
 
 
 

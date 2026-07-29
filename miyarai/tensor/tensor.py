@@ -13,6 +13,8 @@ class Tensor:
         self.dtype = self._infer_dtype(data)
         self.requires_grad = bool(requires_grad)
         self.grad = None
+        self.parents = ()
+
 
     def __repr__(self):
         return f"Tensor({self.data})"
