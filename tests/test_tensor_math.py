@@ -2169,6 +2169,105 @@ class TestAdditionGraphRecording(unittest.TestCase):
 
         self.assertEqual(c.tolist(), [6, 7])
 
+class TestSubtractionGraphRecording(unittest.TestCase):
+
+    def test_sub_records_parents(self):
+        a = Tensor([5, 4])
+        b = Tensor([2, 1])
+
+        c = a - b
+
+        self.assertEqual(c.parents, (a, b))
+
+    def test_sub_records_operation(self):
+        a = Tensor([5])
+        b = Tensor([2])
+
+        c = a - b
+
+        self.assertEqual(c._op, "-")
+
+    def test_sub_propagates_requires_grad_left(self):
+        a = Tensor([5], requires_grad=True)
+        b = Tensor([2])
+
+        self.assertTrue((a - b).requires_grad)
+
+    def test_sub_propagates_requires_grad_right(self):
+        a = Tensor([5])
+        b = Tensor([2], requires_grad=True)
+
+        self.assertTrue((a - b).requires_grad)
+
+    def test_sub_requires_grad_false_when_both_false(self):
+        a = Tensor([5])
+        b = Tensor([2])
+
+        self.assertFalse((a - b).requires_grad)
+
+    def test_sub_returns_correct_values(self):
+        a = Tensor([5, 4])
+        b = Tensor([2, 1])
+
+        c = a - b
+
+        self.assertEqual(c.tolist(), [3, 3])
+
+    def test_sub_scalar_records_parent(self):
+        a = Tensor([5, 4], requires_grad=True)
+
+        c = a - 2
+
+        self.assertEqual(c.parents, (a,))
+
+    def test_sub_scalar_records_operation(self):
+        a = Tensor([5])
+
+        c = a - 2
+
+        self.assertEqual(c._op, "-")
+
+    def test_sub_scalar_requires_grad(self):
+        a = Tensor([5], requires_grad=True)
+
+        c = a - 2
+
+        self.assertTrue(c.requires_grad)
+
+    def test_sub_scalar_returns_correct_values(self):
+        a = Tensor([5, 4])
+
+        c = a - 2
+
+        self.assertEqual(c.tolist(), [3, 2])
+
+    def test_sub_keeps_grad_none(self):
+        a = Tensor([5], requires_grad=True)
+        b = Tensor([2])
+
+        c = a - b
+
+        self.assertIsNone(c.grad)
+
+    def test_sub_keeps_backward_callable(self):
+        a = Tensor([5])
+        b = Tensor([2])
+
+        c = a - b
+
+        self.assertTrue(callable(c._backward))
+
+    def test_sub_does_not_modify_inputs(self):
+        a = Tensor([5], requires_grad=True)
+        b = Tensor([2])
+
+        _ = a - b
+
+        self.assertEqual(a.parents, ())
+        self.assertEqual(b.parents, ())
+        self.assertIsNone(a._op)
+        self.assertIsNone(b._op)
+
 
 
 
