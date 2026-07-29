@@ -2007,6 +2007,29 @@ class TestTensorParents(unittest.TestCase):
         a = Tensor([1,2,3])
         self.assertEqual(a.tolist(), [1,2,3])
 
+class TestTensorOperation(unittest.TestCase):
+
+    def test_op_defaults_to_none(self):
+        a = Tensor([1,2,3])
+        self.assertIsNone(a._op)
+
+    def test_op_exists(self):
+        a = Tensor([1,2,3])
+        self.assertTrue(hasattr(a,"_op"))
+
+    def test_op_none_when_requires_grad_true(self):
+        a = Tensor([1,2,3], requires_grad= True)
+        self.assertIsNone(a._op)
+
+    def test_op_does_not_modify_tensor_data(self):
+        a = Tensor([1,2,3])
+        self.assertEqual(a.tolist(),[1,2,3])
+
+    def test_op_independent_of_parents(self):
+        a = Tensor([1,2,3])
+        self.assertEqual(a.parents, ())
+        self.assertIsNone(a._op)
+
 
 
 

@@ -14,6 +14,7 @@ class Tensor:
         self.requires_grad = bool(requires_grad)
         self.grad = None
         self.parents = ()
+        self._op = None
 
 
     def __repr__(self):
